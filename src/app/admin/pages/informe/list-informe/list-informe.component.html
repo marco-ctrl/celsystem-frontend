@@ -1,0 +1,175 @@
+@if(isWaitResponse()){
+<app-loading-spinner />
+}
+<div class="max-w-5xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+  <!-- Encabezado de la tarjeta -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-gray-800">Lista de Informes</h2>
+
+    <div class="flex space-x-2">
+      <!-- Campo de búsqueda -->
+      <form autocomplete="off" [formGroup]="formSearch" class="search-form">
+        <input
+          type="text"
+          placeholder="Buscar..."
+          formControlName="search"
+          (input)="onSearch()"
+          class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </form>
+
+      <!-- Botón para agregar más datos -->
+      <a
+        class="btn-primary"
+        [routerLink]="['../create']"
+        routerLinkActive="router-link-active"
+        title="Agregar celula"
+      >
+        <mat-icon fontIcon="add" />
+        <span class="hidden sm:inline">Agregar</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="overflow-x-auto sm:overflow-hidden">
+    @if (isLoading()){
+    <table class="table-custom">
+      <thead>
+        <tr>
+          @for (item of headersTable; track $index) {
+          <th [ngClass]="{ '': $index === 0 }">
+            {{ item | uppercase }}
+          </th>
+          }
+          <th>ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (informe of informes()?.data; track $index) {
+        <tr
+          [ngClass]="{
+            'bg-gray-200': $index % 2 === 0,
+            'bg-white': $index % 2 !== 0
+          }"
+        >
+          <td>{{ $index + 1 }}</td>
+          <td>{{ informe.celula.name }}</td>
+          <td>
+            {{ informe.celula.lider?.name }}
+            {{ informe.celula.lider?.lastname }}
+          </td>
+          <td>
+            {{ informe.datetime }}
+          </td>
+          <td>
+            {{ informe.assistant_amount }}
+          </td>
+          <td>{{ informe.visit_amount }}</td>
+          <td>{{ informe.offering | appCurrencyBolivia }}</td>
+          <td
+            [ngClass]="{
+              'text-green-600': informe.status === 1,
+              'text-red-600': informe.status === 0
+            }"
+          >
+            {{ informe.status | appDataStatus }}
+          </td>
+          <td class="px-4 border-b whitespace-nowrap flex space-x-2">
+            <!-- Botón Editar -->
+            <a
+              class="btn-edit"
+              [routerLink]="['../edit/' + informe.id]"
+              routerLinkActive="router-link-active"
+              title="Editar"
+            >
+              <mat-icon fontIcon="edit" />
+            </a>
+            <!-- Botón Eliminar -->
+            @if (informe.status == 1) {
+            <app-button-delete
+              (click)="onChangeStatus(informe.id, informe.status)"
+              color="bg-btn-danger"
+              icon="delete"
+              titulo="Inhabilitar"
+            />
+            } @else {
+            <app-button-delete
+              (click)="onChangeStatus(informe.id, informe.status)"
+              color="bg-btn-success"
+              icon="restore_from_trash"
+              titulo="Habilitar"
+            />
+            }
+          </td>
+        </tr>
+        } @empty{
+        <tr>
+          <td align="center" colspan="5" class="py-4 text-gray-500">
+            No se encontraron datos que mostrar!
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    <!-- Versión vertical de la tabla para pantallas pequeñas -->
+    <div class="sm:hidden">
+      @for (informe of informes()?.data; track informe.id) {
+      <div class="card-list">
+        <p class="card-list-header">
+          #{{ $index + 1 }}
+          <span class="flex space-x-2">
+            <!-- Botón Editar -->
+            <app-button-edit />
+            <!-- Botón Eliminar -->
+            @if (informe.status == 1) {
+            <app-button-delete
+              (click)="onChangeStatus(informe.id, informe.status)"
+              color="bg-btn-danger"
+              icon="delete"
+              titulo="Inhabilitar"
+            />
+            } @else {
+            <app-button-delete
+              (click)="onChangeStatus(informe.id, informe.status)"
+              color="bg-btn-success"
+              icon="restore_from_trash"
+              titulo="Habilitar"
+            />
+            }
+          </span>
+        </p>
+        <p><span>Celula:</span> {{ informe.celula.name }}</p>
+        <p>
+          <span>Lider:</span> {{ informe.celula.lider?.name }}
+          {{ informe.celula.lider?.lastname }}
+        </p>
+        <p>
+          <span>Fecha y Hora:</span>
+          {{ informe.datetime }}
+        </p>
+        <p><span>Asistentes:</span> {{ informe.assistant_amount }}</p>
+        <p><span>Visitas:</span> {{ informe.visit_amount }}</p>
+        <p><span>Estado:</span> {{ informe.status | appDataStatus }}</p>
+      </div>
+      }@empty {
+      <p class="text-gray-500">No se encontraron datos que mostrar!</p>
+      }
+    </div>
+    } @else{
+    <div class="flex items-center justify-center h-16">
+      <div
+        class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"
+      ></div>
+    </div>
+    }
+  </div>
+
+  <!-- Paginador -->
+  <app-paginator
+    [prevPageUrl]="informes()?.prev_page_url"
+    [nextPageUrl]="informes()?.next_page_url"
+    [links]="informes()?.links"
+    (pageChange)="onPageChange($event)"
+  ></app-paginator>
+</div>

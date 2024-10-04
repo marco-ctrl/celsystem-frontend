@@ -1,0 +1,23 @@
+/* Oculta el scrollbar por defecto */
+.sidebar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent; /* Necesario para ocultar el scrollbar en IE y Edge */
+  }
+  
+  /* Muestra el scrollbar al hacer hover */
+  .sidebar:hover::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  /* Personaliza el track y el thumb del scrollbar */
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.6); /* color de la barra de desplazamiento */
+    border-radius: 4px;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.9); /* color de la barra de desplazamiento al hacer hover */
+  }
+  

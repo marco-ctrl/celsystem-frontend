@@ -1,0 +1,64 @@
+<body class="flex items-center justify-center min-h-screen bg-blue-800">
+  <div
+    class="bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-4xl flex flex-wrap md:flex-nowrap"
+    style="width: 90%; max-width: 75%"
+  >
+    <!-- Div izquierdo: Logo de la empresa (se oculta en pantallas pequeñas y extra pequeñas) -->
+    <div
+      class="w-full md:w-1/2 hidden sm:block md:flex items-center justify-center"
+      style="
+        background-image: url(../../../assets/images/logo.jpeg);
+        background-size: cover;
+        background-position: center;
+      "
+    ></div>
+
+    <!-- Div derecho: Formulario de login -->
+    <div class="w-full md:w-1/2 sm:w-4/5 sm:px-8 p-4 md:p-8 flex-grow">
+      <h2 class="text-2xl font-semibold text-center mb-8">
+        Nombre de la Empresa
+      </h2>
+      <form
+        class="space-y-4"
+        autocomplete="off"
+        [formGroup]="myForm"
+        (ngSubmit)="login()"
+      >
+        <div>
+          <label for="email" class="block text-gray-700"
+            >Correo Electrónico</label
+          >
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="correo@ejemplo.com"
+          />
+        </div>
+        <div>
+          <label for="password" class="block text-gray-700">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="********"
+          />
+        </div>
+        <div class="text-right">
+          <a href="#" class="text-sm text-blue-500 hover:underline"
+            >¿Olvidaste tu contraseña?</a
+          >
+        </div>
+        <button
+          type="submit"
+          [disabled]="myForm.invalid"
+          class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+        >
+          Iniciar Sesión
+        </button>
+      </form>
+    </div>
+  </div>
+</body>

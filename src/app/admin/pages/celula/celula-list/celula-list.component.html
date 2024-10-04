@@ -1,0 +1,166 @@
+@if(isWaitResponse()){
+<app-loading-spinner />
+}
+<div class="max-w-5xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+  <!-- Encabezado de la tarjeta -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-gray-800">Lista de Celulas</h2>
+
+    <div class="flex space-x-2">
+      <!-- Campo de búsqueda -->
+      <form autocomplete="off" [formGroup]="formSearch" class="search-form">
+        <input
+          type="text"
+          placeholder="Buscar..."
+          formControlName="search"
+          (input)="onSearch()"
+          class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </form>
+
+      <!-- Botón para agregar más datos -->
+      <!--<a [routerLink]="['../celula-create']" routerLinkActive="router-link-active" >create</a>-->
+      <app-button-add title="Agregar celula" (click)="openModalAdd()" />
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="overflow-x-auto sm:overflow-hidden">
+    @if (isLoading()){
+    <table class="table-custom">
+      <thead>
+        <tr>
+          @for (item of headersTable; track $index) {
+          <th [ngClass]="{ '': $index === 0 }">
+            {{ item | uppercase }}
+          </th>
+          }
+          <th>ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (celula of celulas()?.data; track $index) {
+        <tr
+          [ngClass]="{
+            'bg-gray-200': $index % 2 === 0,
+            'bg-white': $index % 2 !== 0
+          }"
+        >
+          <td>{{ celula.id }}</td>
+          <td>{{ celula.name }}</td>
+          <td>
+            {{ celula.number }}
+          </td>
+          <td>
+            {{ celula.day | appDayWeek }}
+          </td>
+          <td>
+            {{ celula.hour }}
+          </td>
+          <td>{{ celula.lider?.name }} {{ celula.lider?.lastname }}</td>
+          <td
+            [ngClass]="{
+              'text-green-600': celula.status === 1,
+              'text-red-600': celula.status === 0
+            }"
+          >
+            {{ celula.status | appDataStatus }}
+          </td>
+          <td class="px-4 border-b whitespace-nowrap flex space-x-2">
+            <!-- Botón Editar -->
+            <app-button-edit (click)="openModalEdit(celula)" />
+            <!-- Botón Eliminar -->
+            @if (celula.status == 1) {
+            <app-button-delete
+              (click)="onChangeStatus(celula.id, celula.status)"
+              color="bg-btn-danger"
+              icon="delete"
+              titulo="Inhabilitar"
+            />
+            } @else {
+            <app-button-delete
+              (click)="onChangeStatus(celula.id, celula.status)"
+              color="bg-btn-success"
+              icon="restore_from_trash"
+              titulo="Habilitar"
+            />
+            }
+          </td>
+        </tr>
+        } @empty{
+        <tr>
+          <td align="center" colspan="5" class="py-4 text-gray-500">
+            No se encontraron datos que mostrar!
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    <!-- Versión vertical de la tabla para pantallas pequeñas -->
+    <div class="sm:hidden">
+      @for (celula of celulas()?.data; track celula.id) {
+      <div class="card-list">
+        <p class="card-list-header">
+          #{{ celula.id }}
+          <span class="flex space-x-2">
+            <!-- Botón Editar -->
+            <app-button-edit (click)="openModalEdit(celula)" />
+            <!-- Botón Eliminar -->
+            @if (celula.status == 1) {
+            <app-button-delete
+              (click)="onChangeStatus(celula.id, celula.status)"
+              color="bg-btn-danger"
+              icon="delete"
+              titulo="Inhabilitar"
+            />
+            } @else {
+            <app-button-delete
+              (click)="onChangeStatus(celula.id, celula.status)"
+              color="bg-btn-success"
+              icon="restore_from_trash"
+              titulo="Habilitar"
+            />
+            }
+          </span>
+        </p>
+        <p><span>Nombre:</span> {{ celula.name }}</p>
+        <p><span>Numero:</span> {{ celula.number }}</p>
+        <p>
+          <span>Dia:</span>
+          {{ celula.day | appDayWeek }}
+        </p>
+        <p><span>Hora:</span> {{ celula.hour }}</p>
+      </div>
+      }@empty {
+      <p class="text-gray-500">No se encontraron datos que mostrar!</p>
+      }
+    </div>
+    } @else{
+    <div class="flex items-center justify-center h-16">
+      <div
+        class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"
+      ></div>
+    </div>
+    }
+  </div>
+
+  <!-- Paginador -->
+  <app-paginator
+    [prevPageUrl]="celulas()?.prev_page_url"
+    [nextPageUrl]="celulas()?.next_page_url"
+    [links]="celulas()?.links"
+    (pageChange)="onPageChange($event)"
+  ></app-paginator>
+</div>
+
+<app-modal
+  [isVisible]="isModalVisible()"
+  [titulo]="titleModal"
+  (closeModal)="closeModal()"
+>
+  <app-celula-form-admin
+    (closeModal)="closeModal()"
+    (statusResponse)="loadcelulaes(1, '')"
+  ></app-celula-form-admin>
+</app-modal>
+<!---->

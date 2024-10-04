@@ -1,0 +1,29 @@
+<div class="flex flex-wrap justify-center">
+  <div class="w-full lg:w-3/5 p-4">
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <h2 class="text-xl font-semibold mb-4">Ingresos Mensuales</h2>
+      <canvas
+        baseChart
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [legend]="barChartLegend"
+        [type]="barChartType"
+      >
+      </canvas>
+    </div>
+  </div>
+  <div class="w-full lg:w-2/5 p-4">
+      <div class="bg-white rounded-lg shadow-md p-4 pie-chart-container">
+        
+        <canvas baseChart
+          [data]="pieChartData"
+          [labels]="pieChartLabels"
+          [options]="pieChartOptions"
+          [legend]="pieChartLegend"
+          [type]="pieChartType">
+        </canvas>
+      </div>
+    </div>
+</div>
+

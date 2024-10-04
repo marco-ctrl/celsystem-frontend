@@ -1,0 +1,99 @@
+<div>
+  <div class="block sm:block md:hidden">
+    <button
+      type="button"
+      class="btn-secondary"
+      (click)="fileUpload.click()"
+    >
+      <mat-icon fontIcon="photo_camera" /> Tomar Foto
+    </button>
+  </div>
+  <div class="flex flex-wrap -mx-2">
+    <div class="w-full md:w-1/2 px-2 hidden md:block">
+      <button
+        type="button"
+        id="encender"
+        class="btn-success"
+        (click)="initCamera()"
+      >
+        <mat-icon fontIcon="videocam" /> Encender
+      </button>
+    </div>
+    <div class="w-full md:w-1/2 px-2 hidden md:block">
+      <button
+        type="button"
+        id="apagar"
+        class="btn-danger"
+        (click)="apagarCamera()"
+      >
+        <mat-icon fontIcon="videocam_off"></mat-icon> Apagar
+      </button>
+    </div>
+  </div>
+  <div class="flex flex-wrap -mx-2">
+    <div class="w-full md:w-1/2 p-2 hidden md:block">
+      <div class="video-wrap">
+        <video
+          #video
+          width="140"
+          height="140"
+          poster="../../../../assets/images/user-default.png"
+        ></video>
+      </div>
+    </div>
+    <div class="w-full md:w-1/2 p-2">
+      <img #imagen id="imagen" width="140" height="140" />
+    </div>
+  </div>
+  <div class="flex flex-wrap -mx-2">
+    <div class="w-full md:w-1/2 p-2 hidden md:block">
+      <div class="controller">
+        <button
+          type="button"
+          id="snap"
+          class="btn-secondary"
+          (click)="captureImage()"
+        >
+          <mat-icon fontIcon="photo_camera" /> Capturar
+        </button>
+      </div>
+    </div>
+    <div class="w-full md:w-1/2 p-2 hidden md:block">
+      <div class="controller">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="fileUpload.click()"
+        >
+          <mat-icon fontIcon="image_search" /> Buscar
+        </button>
+        <input
+          type="file"
+          class="hidden"
+          id="file-upload"
+          aria-describedby="fileHelp"
+        />
+      </div>
+    </div>
+    <div class="w-full md:w-1/2 p-2 hidden md:block">
+      <div class="controller">
+        <button
+          type="button"
+          class="w-full bg-gray-600 text-white py-2 rounded-lg"
+          (click)="fileUpload.click()"
+          hidden
+        >
+          <i class="fas fa-search-plus"></i> Buscar Foto
+        </button>
+        <input
+          type="file"
+          #fileUpload
+          style="display: none"
+          (change)="readFile($event)"
+        />
+      </div>
+    </div>
+  </div>
+  <canvas #canvas width="140" height="140" style="display: none"></canvas>
+  <input type="hidden" id="foto" name="foto" />
+</div>

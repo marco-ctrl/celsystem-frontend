@@ -1,0 +1,177 @@
+<form [formGroup]="liderForm" (ngSubmit)="onSubmit()" class="form-class">
+  <!-- Primera fila de columnas -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Primera columna -->
+    <div class="col-span-1 space-y-6">
+      <!-- Nombre -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Nombre</mat-label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Ingrese el Nombre"
+            class="input-base"
+            [value]="liderValue()?.name"
+            [ngClass]="{ 'border-red-500': isValidField('name') }"
+            matInput
+          />
+          @if (isValidField('name')) {
+          <mat-error>
+            <span customLabel [errors]="liderForm.get('name')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Apellido -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Apellido</mat-label>
+          <input
+            id="lastname"
+            type="text"
+            formControlName="lastname"
+            placeholder="Ingrese el Apellido"
+            class="input-base"
+            [value]="liderValue()?.lastname"
+            [ngClass]="{ 'border-red-500': isValidField('lastname') }"
+            matInput
+          />
+          @if (isValidField('lastname')) {
+          <mat-error>
+            <span
+              customLabel
+              [errors]="liderForm.get('lastname')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Fecha de Nacimiento -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input
+            id="birthdate"
+            formControlName="birthdate"
+            [value]="liderValue()?.birthdate"
+            [ngClass]="{ 'border-red-500': isValidField('birthdate') }"
+            matInput
+            [matDatepicker]="picker"
+            [min]="minDate"
+            [max]="maxDate"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          @if (isValidField('birthdate')) {
+          <mat-error>
+            <span
+              customLabel
+              [errors]="liderForm.get('birthdate')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda columna -->
+    <div class="col-span-1 space-y-6">
+      <!-- Contacto -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Contacto</mat-label>
+          <input
+            id="contact"
+            type="tel"
+            formControlName="contact"
+            placeholder="Ingrese el número de Contacto"
+            class="input-base"
+            [value]="liderValue()?.contact"
+            [ngClass]="{ 'border-red-500': isValidField('contact') }"
+            matInput
+          />
+          @if (isValidField('contact')) {
+          <mat-error>
+            <span
+              customLabel
+              [errors]="liderForm.get('contact')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Correo -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Corrreo Electronico</mat-label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="Ingrese el correo"
+            class="input-base"
+            [value]="liderValue()?.user?.email"
+            [ngClass]="{ 'border-red-500': isValidField('email') }"
+            matInput
+          />
+          @if (isValidField('email')) {
+          <mat-error>
+            <span customLabel [errors]="liderForm.get('email')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Dirección -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Dirección</mat-label>
+          <textarea
+          id="addres"
+          formControlName="addres"
+          placeholder="Ingrese la Dirección"
+          rows="3"
+          matInput
+          [value]="liderValue()?.addres"
+          [ngClass]="{ 'border-red-500': isValidField('addres') }"
+        ></textarea>
+        @if (isValidField('addres')) {
+        <mat-error>
+          <span customLabel [errors]="liderForm.get('addres')?.errors"></span>
+        </mat-error>
+        }
+        </mat-form-field>
+        
+      </div>
+    </div>
+
+    <!-- Tercera columna -->
+    <div class="col-span-1 md:col-span-2 lg:col-span-1 space-y-6">
+      <!-- Foto -->
+      <app-camara
+        #cameraComponent
+        class="flex items-center justify-center"
+        (photoFormated)="updatePhoto($event)"
+      />
+      <input
+        type="hidden"
+        formControlName="foto"
+        [value]="liderValue()?.foto"
+      />
+    </div>
+  </div>
+  <hr />
+  <!-- Botones de acción -->
+  <div class="flex justify-end space-x-4">
+    <app-button-cancel (click)="close()" />
+    <app-button-save />
+  </div>
+</form>

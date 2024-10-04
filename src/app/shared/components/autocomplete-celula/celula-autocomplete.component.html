@@ -1,0 +1,34 @@
+<mat-form-field class="w-full">
+  <mat-label>Seleccionar Celula*</mat-label>
+  <input
+    type="text"
+    matInput
+    (input)="searchLider()"
+    [formControl]="searchInput"
+    [matAutocomplete]="auto"
+    placeholder="Seleccionar Celula"
+  />
+
+  <ng-content></ng-content>
+
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    (optionSelected)="onSelectedOption($event)"
+  >
+    @for (celula of celulas()?.data; track celula.id) {
+    <mat-option [value]="celula">
+      {{ celula.number }} - {{ celula.name }}
+    </mat-option>
+    }
+  </mat-autocomplete>
+
+  <mat-option
+    *ngIf="
+      celulas()?.data?.length === 0 &&
+      searchInput.value &&
+      searchInput.value.length > 0
+    "
+  >
+    No se encontro nada con el termino de busqueda {{ searchInput.value }}
+  </mat-option>
+</mat-form-field>

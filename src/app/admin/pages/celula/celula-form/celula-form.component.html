@@ -1,0 +1,139 @@
+<form [formGroup]="celulaForm" (ngSubmit)="onSubmit()" class="form-class">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Primera columna -->
+    <div class="col-span-1 space-y-6">
+      <!-- numero de celula -->
+      <div>
+        <app-lider-autocomplete (liderId)="selectLider($event)">
+          @if (isValidField('lider_id')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="celulaForm.get('lider_id')?.errors"
+              ></span>
+            </mat-error>
+            }
+        </app-lider-autocomplete>
+      </div>
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Número de Celula</mat-label>
+          <input
+            id="number"
+            formControlName="number"
+            type="number"
+            matInput
+            placeholder="Numero de Celula"
+            [ngClass]="{ 'border-red-500': isValidField('number') }"
+            min="1"
+          />
+          @if (isValidField('number')) {
+          <mat-error>
+            <span
+              customLabel
+              [errors]="celulaForm.get('number')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- nombre de celula -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Nombre de Celula</mat-label>
+          <input
+            id="name"
+            formControlName="name"
+            matInput
+            type="text"
+            placeholder="Nombre de Celula"
+            [ngClass]="{ 'border-red-500': isValidField('name') }"
+          />
+          @if (isValidField('name')) {
+          <mat-error class="invalid-text">
+            <span customLabel [errors]="celulaForm.get('name')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda columna -->
+    <div class="col-span-1 space-y-6">
+      <!-- dia de la semana -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Dia de Semana</mat-label>
+          <mat-select
+            id="name"
+            formControlName="day"
+            [ngClass]="{ 'border-red-500': isValidField('day') }"
+          >
+            @for (day of days; track day.id) {
+            <mat-option [value]="day.id"
+              >{{ day.id }} : {{ day.name }}</mat-option
+            >
+            }
+          </mat-select>
+          @if (isValidField('day')) {
+          <mat-error class="invalid-text">
+            <span customLabel [errors]="celulaForm.get('day')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <!-- hora del dia -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Hora</mat-label>
+          <input
+            matInput
+            id="hour"
+            type="time"
+            formControlName="hour"
+            placeholder="HH:mm"
+            [ngClass]="{ 'border-red-500': isValidField('hour') }"
+          />
+          @if (isValidField('hour')) {
+          <mat-error>
+            <span customLabel [errors]="celulaForm.get('hour')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- direccion -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Direccion</mat-label>
+          <textarea
+            id="addres"
+            formControlName="addres"
+            matInput
+            placeholder="Direccion de Celula"
+            rows="1"
+            [ngClass]="{ 'border-red-500': isValidField('addres') }"
+          ></textarea>
+          @if (isValidField('addres')) {
+          <mat-error class="invalid-text">
+            <span
+              customLabel
+              [errors]="celulaForm.get('addres')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div id="map" style="height: 300px"></div>
+
+  <hr />
+  <!-- Botones de acción -->
+  <div class="flex justify-end space-x-4">
+    <app-button-cancel (click)="close()" />
+    <app-button-save />
+  </div>
+</form>

@@ -1,1 +1,139 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* styles.css o tailwind.css */
+@layer components {
+    .input-base {
+        @apply mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+    }
+
+    .label-input {
+        @apply block text-sm font-medium text-gray-700
+    }
+
+    .btn-primary {
+        @apply bg-blue-600 text-white px-4 py-2 rounded-full sm:rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center space-x-2
+    }
+
+    .btn-edit {
+        @apply flex items-center justify-center bg-gray-600 text-white p-1 rounded-lg shadow-md hover:bg-gray-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-200
+    }
+
+    .btn-danger {
+        @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center space-x-2
+    }
+
+    .btn-success {
+        @apply bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center space-x-2
+    }
+
+    .btn-secondary {
+        @apply bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center space-x-2
+    }
+
+    .btn-action {
+        @apply flex items-center justify-center text-white p-1 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 transition-all duration-200
+    }
+
+    .bg-btn-success {
+        @apply bg-green-600 hover:bg-green-500 focus:ring-green-400
+    }
+
+    .bg-btn-danger {
+        @apply bg-red-600 hover:bg-red-500 focus:ring-red-400
+    }
+
+    .table-custom {
+        @apply min-w-full bg-white border border-gray-200 text-sm sm:table hidden
+    }
+
+    .table thead {
+        @apply bg-gray-800 text-white
+    }
+
+    .table thead th {
+        @apply py-2 px-4 text-center
+    }
+
+    .table tbody td {
+        @apply py-2 px-4 border-b text-center
+    }
+
+    .card-list {
+        @apply bg-white border border-gray-200 rounded-lg mb-4 p-4 shadow-sm
+    }
+
+    .card-list .card-list-header {
+        @apply font-bold text-gray-800 flex justify-between
+    }
+
+    .card-list p span {
+        @apply font-semibold
+    }
+
+    /* class invalid */
+    .invalid-text {
+        @apply text-red-500 text-xs mt-1;
+    }
+
+    /* formulario */
+    .form-class {
+        @apply max-w-4xl mx-auto bg-white p-5 rounded-lg shadow-lg space-y-6
+    }
+
+    .mapa-celulas {
+        height: 100vh;
+
+    }
+
+    div .data {
+        @apply relative w-full p-4 border border-gray-400 rounded-md mx-auto
+    }
+
+    .demo-table {
+        width: 100%;
+    }
+
+    .mat-column-position {
+        width: 32px;
+        border-right: 1px solid currentColor;
+        padding-right: 24px;
+        text-align: center;
+    }
+
+    .mat-column-demo-name {
+        padding-left: 16px;
+        font-size: 20px;
+    }
+
+    .mat-column-demo-weight {
+        font-style: italic;
+    }
+
+    .mat-column-demo-symbol {
+        width: 32px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .mat-stepper-horizontal {
+        margin-top: 8px;
+    }
+
+    .mat-mdc-form-field {
+        margin-top: 16px;
+    }
+}

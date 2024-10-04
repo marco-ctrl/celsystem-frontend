@@ -1,0 +1,17 @@
+<div class="min-h-screen flex bg-gray-100">
+<!-- Sidebar -->
+@if ( isSidebarVisible() ) {
+    <app-sidebar [sidebarItems]="itemSideBar"></app-sidebar>
+}
+
+<!-- Contenido Principal -->
+<div class="flex-1">
+    <app-navbar 
+        [userName]="userName"
+        (isSidebarVisible)="updateToggleSidebar($event)" 
+    />
+    <div class="p-4">
+      <router-outlet />
+    </div>
+  </div>
+</div>

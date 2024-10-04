@@ -1,0 +1,62 @@
+<nav
+  class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md"
+>
+  <div class="grid grid-cols-2">
+    <!-- Botón de menú para pantallas pequeñas -->
+    <div>
+      <button
+        (click)="toggleSidebar()"
+        class="p-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition ease-in-out duration-200"
+      >
+        <!-- Icono de menú -->
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Icon"
+          fontIcon="menu"
+          class="text-xl"
+        ></mat-icon>
+      </button>
+    </div>
+
+    <!-- Logo y nombre de la empresa -->
+    <div>
+      @if (isSideBar) {
+      <div class="flex items-center space-x-3">
+        <img
+          src="../../../assets/images/logo.jpeg"
+          alt="Logo"
+          class="h-10 w-10 rounded-full shadow-sm"
+        />
+        <span class="text-lg font-semibold">Nombre Empresa</span>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Nombre y foto del usuario -->
+  <div class="relative user-menu" (click)="toggleUserMenu()">
+    <div
+      class="flex items-center space-x-2 cursor-pointer hover:bg-gray-700 p-2 rounded-md transition ease-in-out duration-200"
+    >
+      <span class="hidden sm:inline font-medium">{{ userName() }}</span>
+      <img
+        [srcset]="(user()?.lider)!.foto | appImageProfile"
+        alt="Foto de Usuario"
+        class="h-10 w-10 rounded-full border-2 border-gray-700"
+      />
+    </div>
+
+    <!-- Menú desplegable -->
+    <div
+      *ngIf="isUserMenuOpen"
+      class="absolute right-0 mt-2 bg-white text-gray-700 rounded-md shadow-lg w-48 z-50"
+    >
+      <app-menu-item-desplegable name="Perfil" icon="person" />
+      <app-menu-item-desplegable
+        name="Cerrar Sesión"
+        icon="logout"
+        (click)="onLogout()"
+      />
+    </div>
+  </div>
+</nav>
