@@ -41,7 +41,8 @@ export default class LayoutComponent {
     { url: 'lider', title: 'Lider', icon: 'person' },
     { url: 'celula', title: 'Celula', icon: 'home' },
     { url: 'map-celula', title: 'Mapa Celula', icon: 'map' },
-    { url: 'informe', title: 'Informe Celula', icon: 'list_all' }
+    { url: 'informe', title: 'Informe Celula', icon: 'list_all' },
+    { url: 'member', title: 'Membresia', icon: 'groups' }
   ]
 
   toggleUserMenu() {

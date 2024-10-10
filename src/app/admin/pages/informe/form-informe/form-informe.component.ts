@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { StateWaitResponseService } from '@services/state-wait-response.service';
 import { CelulaAdminService } from '../../../services/celula-admin.service';
 import { CelulaAutocompleteComponent } from "../../../../shared/components/autocomplete-celula/celula-autocomplete.component";
-import { MiembrosService } from '../../../services/miembros.service';
+import { MiembrosService } from '../../../services/miembros-admin.service';
 import { ButtonAddComponent } from "../../../../shared/components/button-add/button-add.component";
 
 import { Asistente, Miembro, Visita } from '../../../interfaces/miembro-admin.interface';

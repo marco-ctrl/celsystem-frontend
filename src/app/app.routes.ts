@@ -58,6 +58,31 @@ export const routes: Routes = [
                 ]
             },
             {
+                path: 'member',
+                children: [
+                    {
+                        path: 'list',
+                        title: 'Membresia',
+                        loadComponent: () => import('./admin/pages/miembros/member-list/member-list.component'),
+                    },
+                    {
+                        path: 'create',
+                        title: 'Membresia',
+                        loadComponent: () => import('./admin/pages/miembros/member-form/member-form.component'),
+                    },
+                    {
+                        path: 'edit/:id',
+                        title: 'Membresia',
+                        loadComponent: () => import('./admin/pages/miembros/member-form/member-form.component'),
+                    },
+                    {
+                        path: '',
+                        redirectTo: 'list',
+                        pathMatch: 'full',
+                    },
+                ]
+            },
+            {
                 path: '',
                 redirectTo: 'home',
                 pathMatch: 'full',

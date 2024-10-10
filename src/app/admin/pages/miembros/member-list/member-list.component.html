@@ -1,0 +1,175 @@
+@if(isWaitResponse()){
+    <app-loading-spinner />
+    }
+    <div class="max-w-5xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+      <!-- Encabezado de la tarjeta -->
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">Lista de Informes</h2>
+    
+        <div class="flex space-x-2">
+          <!-- Campo de búsqueda -->
+          <form autocomplete="off" [formGroup]="formSearch" class="search-form">
+            <input
+              type="text"
+              placeholder="Buscar..."
+              formControlName="search"
+              (input)="onSearch()"
+              class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </form>
+    
+          <!-- Botón para agregar más datos -->
+          <a
+            class="btn-primary"
+            [routerLink]="['../create']"
+            routerLinkActive="router-link-active"
+            title="Agregar celula"
+          >
+            <mat-icon fontIcon="add" />
+            <span class="hidden sm:inline">Agregar</span>
+          </a>
+        </div>
+      </div>
+    
+      <!-- Tabla -->
+      <div class="overflow-x-auto sm:overflow-hidden">
+        @if (isLoading()){
+        <table class="table-custom">
+          <thead>
+            <tr>
+              @for (item of headersTable; track $index) {
+              <th [ngClass]="{ '': $index === 0 }">
+                {{ item | uppercase }}
+              </th>
+              }
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (member of members()?.data; track $index) {
+            <tr
+              [ngClass]="{
+                'bg-gray-200': $index % 2 === 0,
+                'bg-white': $index % 2 !== 0
+              }"
+            >
+              <td>{{ $index + 1 }}</td>
+              <td>{{ member.name }}</td>
+              <td>
+                {{ member.lastname }}
+                </td>
+                <td>{{ member.contact }}</td>
+              <td>{{ member.celula?.name }}</td>
+              <td>{{ member.tipe | appTipeMember }}</td>
+              <td
+                [ngClass]="{
+                  'text-green-600': member.status === 1,
+                  'text-red-600': member.status === 0
+                }"
+              >
+                {{ member.status | appDataStatus }}
+              </td>
+              <td class="px-4 border-b whitespace-nowrap flex space-x-2">
+                <!-- Botón Editar -->
+                <a
+                  class="btn-edit"
+                  [routerLink]="['../edit/' + member.id]"
+                  routerLinkActive="router-link-active"
+                  title="Editar"
+                >
+                  <mat-icon fontIcon="edit" />
+                </a>
+                <!-- Botón Eliminar -->
+                @if (member.status == 1) {
+                <app-button-delete
+                  (click)="onChangeStatus(member.id!, member.status)"
+                  color="bg-btn-danger"
+                  icon="delete"
+                  titulo="Inhabilitar"
+                />
+                } @else {
+                <app-button-delete
+                  (click)="onChangeStatus(member.id!, member.status)"
+                  color="bg-btn-success"
+                  icon="restore_from_trash"
+                  titulo="Habilitar"
+                />
+                }
+              </td>
+            </tr>
+            } @empty{
+            <tr>
+              <td align="center" colspan="5" class="py-4 text-gray-500">
+                No se encontraron datos que mostrar!
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+        <!-- Versión vertical de la tabla para pantallas pequeñas -->
+        <div class="sm:hidden">
+          @for (member of members()?.data; track member.id) {
+          <div class="card-list">
+            <p class="card-list-header">
+              #{{ $index + 1 }}
+              <span class="flex space-x-2">
+                <!-- Botón Editar -->
+                <a
+                class="btn-edit"
+                [routerLink]="['../edit/' + member.id]"
+                routerLinkActive="router-link-active"
+                title="Editar"
+              >
+                <mat-icon fontIcon="edit" />
+              </a>
+                <!-- Botón Eliminar -->
+                @if (member.status == 1) {
+                <app-button-delete
+                  (click)="onChangeStatus(member.id!, member.status)"
+                  color="bg-btn-danger"
+                  icon="delete"
+                  titulo="Inhabilitar"
+                />
+                } @else {
+                <app-button-delete
+                  (click)="onChangeStatus(member.id!, member.status)"
+                  color="bg-btn-success"
+                  icon="restore_from_trash"
+                  titulo="Habilitar"
+                />
+                }
+              </span>
+            </p>
+            <p><span>Nombre:</span> {{ member.name }}</p>
+            <p>
+              <span>Apellido:</span> {{ member.lastname }}
+            </p>
+            <p>
+              <span>Celula:</span>
+              {{ member.celula?.name }}
+            </p>
+            <p><span>Tipo:</span> {{ member.tipe | appTipeMember }}</p>
+            <p><span>Estado:</span> {{ member.status | appDataStatus }}</p>
+          </div>
+          }@empty {
+          <p class="text-gray-500">No se encontraron datos que mostrar!</p>
+          }
+        </div>
+        } @else{
+        <div class="flex items-center justify-center h-16">
+          <div
+            class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"
+          ></div>
+        </div>
+        }
+      </div>
+    
+      <!-- Paginador -->
+      <app-paginator
+        [prevPageUrl]="members()?.prev_page_url"
+        [nextPageUrl]="members()?.next_page_url"
+        [links]="members()?.links"
+        (pageChange)="onPageChange($event)"
+      ></app-paginator>
+    </div>
+    

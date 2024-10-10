@@ -4,11 +4,10 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Lider } from '../../../admin/interfaces/lider-admin.interface';
-import { LiderAdminService } from '../../../admin/services/lider-admin.service';
 import { CelulaAdminService } from '../../../admin/services/celula-admin.service';
 import DashboardComponent from "../../../dashboard/dashboard.component";
 import { Celula } from '../../../admin/interfaces/celula-admin.interface';
+import { CelulaAutocompleteService } from '@services/celula-autocomplete.service';
 
 @Component({
   selector: 'app-celula-autocomplete',
@@ -32,10 +31,11 @@ export class CelulaAutocompleteComponent {
   public searchInput = new FormControl('')
   public selectedCelula?: Celula;
 
-  //private liderService = inject(LiderAdminService);
   private celulaService = inject(CelulaAdminService);
+  private celulaAutocompleteService = inject(CelulaAutocompleteService);
 
   public celulas = computed(() => this.celulaService.celulaes());
+  public valueForm = computed(() => this.celulaAutocompleteService._valueForm());
   
   public checkStateCelula = effect(() => {
     if(this.celulaService.celula()){
@@ -72,5 +72,11 @@ export class CelulaAutocompleteComponent {
 
     this.celulaService._celula.set(celula);
   }
+
+  public checkValueFormStatus = effect(() => {
+    if(this.valueForm()){
+      this.searchInput.setValue(this.valueForm());
+    }
+  });
 
  }
