@@ -1,0 +1,136 @@
+    <div class="max-w-5xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+      <!-- Encabezado de la tarjeta -->
+      <div class="p-3">
+        <h2 class="text-xl font-bold text-gray-800">Lista de Celulas</h2>
+      </div>
+      <div class="flex mb-4">
+        <div class="flex justify-between items-end space-x-2">
+          <!-- Campo de búsqueda -->
+          <form autocomplete="off" [formGroup]="formSearch" class="search-form">
+            <mat-form-field class="w-full">
+          <mat-label>Selecione Tipo de Celula</mat-label>
+          <mat-select
+            id="tipe"
+            formControlName="tipe"
+            [ngClass]="{ 'border-red-500': isValidField('tipe') }"
+          >
+            @for (tipe of tipes; track tipe.id) {
+            <mat-option [value]="tipe.id"
+              >{{ tipe.name }}</mat-option
+            >
+            }
+          </mat-select>
+          @if (isValidField('tipe')) {
+          <mat-error class="invalid-text">
+            <span customLabel [errors]="formSearch.get('tipe')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button (click)="onSearch()" title="Visualizar" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center space-x-2">
+              <mat-icon>preview</mat-icon>
+            </button>
+        
+            <button (click)="onDownloadPDF()" title="Ver PDF" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center">
+              <mat-icon>picture_as_pdf</mat-icon>
+            </button>
+        
+            <button (click)="onDownloadExcel()" title="Descargar xls" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
+              <mat-icon>grid_on</mat-icon>
+            </button>
+          </div>
+          </form>
+    
+          <!-- Botón para agregar más datos -->
+          <!--<a [routerLink]="['../celula-create']" routerLinkActive="router-link-active" >create</a>-->
+        </div>
+      </div>
+    
+      <!-- Tabla -->
+      <div class="overflow-x-auto sm:overflow-hidden">
+        @if (isLoading()){
+        <table class="table-custom">
+          <thead>
+            <tr>
+              @for (item of headersTable; track $index) {
+              <th [ngClass]="{ '': $index === 0 }">
+                {{ item | uppercase }}
+              </th>
+              }
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (celula of celulas()?.data; track $index) {
+            <tr
+              [ngClass]="{
+                'bg-gray-200': $index % 2 === 0,
+                'bg-white': $index % 2 !== 0
+              }"
+            >
+              <td>{{ $index + 1 }}</td>
+              <td>{{ celula.name }}</td>
+              <td>
+                {{ celula.number }}
+              </td>
+              <td>
+                {{ celula.day | appDayWeek }}
+              </td>
+              <td>
+                {{ celula.hour }}
+              </td>
+              <td>{{ celula.lider?.name | uppercase }} {{ celula.lider?.lastname | uppercase }}</td>
+              <td>
+                {{ celula.tipe | appTipeCelula }}
+              </td>
+              <td class="px-4 border-b whitespace-nowrap flex space-x-2">
+                <!-- Botón Editar -->
+            </td>
+            </tr>
+            } @empty{
+            <tr>
+              <td align="center" colspan="5" class="py-4 text-gray-500">
+                No se encontraron datos que mostrar!
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+        <!-- Versión vertical de la tabla para pantallas pequeñas -->
+        <div class="sm:hidden">
+          @for (celula of celulas()?.data; track celula.id) {
+          <div class="card-list">
+            <p class="card-list-header">
+              #{{ celula.id }}
+              <span class="flex space-x-2">
+                </span>
+            </p>
+            <p><span>Nombre:</span> {{ celula.name }}</p>
+            <p><span>Numero:</span> {{ celula.number }}</p>
+            <p>
+              <span>Dia:</span>
+              {{ celula.day | appDayWeek }}
+            </p>
+            <p><span>Hora:</span> {{ celula.hour }}</p>
+          </div>
+          }@empty {
+          <p class="text-gray-500">No se encontraron datos que mostrar!</p>
+          }
+        </div>
+        } @else{
+        <div class="flex items-center justify-center h-16">
+          <div
+            class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"
+          ></div>
+        </div>
+        }
+      </div>
+    
+      <!-- Paginador -->
+      <!--<app-paginator
+        [prevPageUrl]="celulas()?.prev_page_url"
+        [nextPageUrl]="celulas()?.next_page_url"
+        [links]="celulas()?.links"
+        (pageChange)="onPageChange($event)"
+      ></app-paginator>-->
+    </div>

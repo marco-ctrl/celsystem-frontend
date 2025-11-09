@@ -1,0 +1,13 @@
+<div class="card bg-white p-4 flex items-center">
+  <div class="flex-shrink-0">
+    <ng-content select="[card-icon]"></ng-content>
+  </div>
+  <div class="ml-4">
+    <h3 class="text-lg font-medium text-gray-700">
+      <ng-content select="[card-title]"></ng-content>
+    </h3>
+    <p class="text-gray-500">
+      <ng-content select="[card-content]"></ng-content>
+    </p>
+  </div>
+</div>

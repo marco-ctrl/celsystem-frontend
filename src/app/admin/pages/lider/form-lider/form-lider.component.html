@@ -1,0 +1,159 @@
+<h2 mat-dialog-title>Registrar Lider</h2>
+<form [formGroup]="liderForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content class="max-h-[80vh] overflow-y-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Nombre -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Ingrese el Nombre"
+          matInput
+        />
+        @if (isValidField('name')) {
+        <mat-error>
+          <span customLabel [errors]="liderForm.get('name')?.errors"></span>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Apellido -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Apellido</mat-label>
+        <input
+          type="text"
+          formControlName="lastname"
+          placeholder="Ingrese el Apellido"
+          matInput
+        />
+        @if (isValidField('lastname')) {
+        <mat-error>
+          <span customLabel [errors]="liderForm.get('lastname')?.errors"></span>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fecha de Nacimiento -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Fecha de Nacimiento</mat-label>
+        <input
+          formControlName="birthdate"
+          matInput
+          [matDatepicker]="picker"
+          [min]="minDate"
+          [max]="maxDate"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (isValidField('birthdate')) {
+        <mat-error>
+          <span
+            customLabel
+            [errors]="liderForm.get('birthdate')?.errors"
+          ></span>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <div class="grid grid-cols-2">
+        <!-- codigo -->
+        <div class="pr-1">
+          <mat-form-field class="w-full">
+            <mat-label>País</mat-label>
+            <mat-select formControlName="code">
+              <mat-option
+                *ngFor="let country of countries"
+                [value]="country.code"
+              >
+                <img
+                  [src]="country.flag"
+                  alt="{{ country.name }}"
+                  style="width: 24px; height: 16px; margin-right: 8px"
+                />
+                {{ country.code }}
+              </mat-option>
+            </mat-select>
+            @if (isValidField('code')) {
+            <mat-error class="invalid-text">
+              <span customLabel [errors]="liderForm.get('code')?.errors"></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <!-- Contacto -->
+        <div>
+          <mat-form-field class="w-full">
+            <mat-label>Contacto</mat-label>
+            <input
+              type="tel"
+              formControlName="contact"
+              placeholder="Ingrese el número de Contacto"
+              class="input-base"
+              [value]="liderValue()?.contact"
+              matInput
+            />
+            @if (isValidField('contact')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="liderForm.get('contact')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Correo Electrónico -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Correo Electrónico</mat-label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Ingrese el correo"
+          matInput
+        />
+        @if (isValidField('email')) {
+        <mat-error>
+          <span customLabel [errors]="liderForm.get('email')?.errors"></span>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Dirección -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Dirección</mat-label>
+        <textarea
+          matInput
+          formControlName="addres"
+          placeholder="Ingrese la Dirección"
+          rows="3"
+        ></textarea>
+        @if (isValidField('addres')) {
+        <mat-error>
+          <span customLabel [errors]="liderForm.get('addres')?.errors"></span>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Foto -->
+      <div class="col-span-full flex justify-center items-center">
+        <app-camera #cameraComponent (photoFormated)="updatePhoto($event)" />
+        <input type="hidden" formControlName="foto" />
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="mt-4 space-x-2">
+    <button mat-button color="warn" type="button" (click)="close()" [disabled]="isWaitResponse()">
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="isWaitResponse()">
+      {{ isWaitResponse() ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

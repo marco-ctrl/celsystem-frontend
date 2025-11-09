@@ -1,0 +1,189 @@
+<div class="p-4 max-w-7xl">
+  <h2 class="text-2xl font-bold mb-4">Gestión de Lideres</h2>
+  <!-- Contenedor principal como tarjeta flotante -->
+  <!-- <div class="bg-white rounded-2xl shadow-lg p-6"> -->
+  <!-- Search Bar -->
+  <div class="mb-4">
+    <form
+      autocomplete="off"
+      [formGroup]="formSearch"
+      class="flex flex-row gap-2"
+    >
+      <mat-form-field class="md:w-1/3 pr-1">
+        <mat-label>Buscar Lider</mat-label>
+        <input
+          matInput
+          placeholder="Ingrese descripción o estado"
+          formControlName="search"
+          (keyup)="onSearch()"
+        />
+      </mat-form-field>
+      <div>
+        <button
+          mat-mini-fab
+          title="Agregar Lider"
+          color="primary"
+          (click)="openLiderForm()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Responsive Table -->
+  <div class="hidden md:block">
+    <mat-table [dataSource]="dataSource" class="w-full">
+      <!-- ID Column -->
+       <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+        <mat-cell *matCellDef="let lider">{{ lider.id }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="photo">
+        <mat-header-cell *matHeaderCellDef>Foto</mat-header-cell>
+        <mat-cell *matCellDef="let lider"><img
+              [srcset]="lider.foto | appImageProfile"
+              alt="foto lider"
+              class="rounded-full"
+              width="50"
+            /></mat-cell>
+      </ng-container>
+
+      <!-- Description Nombre -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+        <mat-cell *matCellDef="let lider">{{ lider.name }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Apellido -->
+      <ng-container matColumnDef="lastname">
+        <mat-header-cell *matHeaderCellDef>Apellido</mat-header-cell>
+        <mat-cell *matCellDef="let lider">{{ lider.lastname }}</mat-cell>
+      </ng-container>
+
+      <!-- contacto  -->
+      <ng-container matColumnDef="contact">
+        <mat-header-cell *matHeaderCellDef>Contacto</mat-header-cell>
+        <mat-cell *matCellDef="let lider">
+          {{ lider.contact }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Email  -->
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+        <mat-cell *matCellDef="let lider">{{ lider.user.email }}</mat-cell>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+        <mat-cell *matCellDef="let lider">
+          <span
+            [ngClass]="{
+              'text-green-500': lider.status === 1,
+              'text-red-500': lider.status === 0
+            }"
+          >
+            {{ lider.status === 1 ? "Activo" : "Inactivo" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let lider">
+          <button
+            mat-icon-button
+            color="primary"
+            title="editar Lider"
+            (click)="editLider(lider)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            title="dar baja Lider"
+            (click)="deleteLider(lider.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+
+  <!-- Responsive Cards for Small Screens -->
+  <div class="block md:hidden">
+    @for (lider of liderList()?.data; track $index) {
+    <mat-card class="mb-4">
+      <mat-card-header>
+        <mat-card-title>{{ lider.name }}</mat-card-title>
+        <mat-card-subtitle>{{ lider.lastname }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <!-- TODO Image -->
+      <img
+        mat-card-image
+        [src]="lider.foto | appImageProfile"
+        [alt]="lider.name"
+      />
+
+      <mat-card-content class="mt-2">
+        <h4>{{ lider.user.email }}</h4>
+        <p>
+          <strong>Contacto:</strong> {{ lider.contact }}
+          <br />
+          <!--<mat-chip-listbox>
+            <mat-chip
+                *ngFor="let name of hero.characters.split(',') | slice : 0 : 3"
+              >
+                {{ name }}
+              </mat-chip> 
+            </mat-chip-listbox>-->
+        </p>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions>
+        <button
+          mat-button
+          mat-raised
+          color="primary"
+          title="editar Lider"
+          (click)="editLider(lider)"
+        >
+          <mat-icon>edit</mat-icon> Editar
+        </button>
+        <span class="spacer"></span>
+        <button
+          mat-button
+          mat-raised
+          color="warn"
+          title="dar baja Lider"
+          (click)="deleteLider(lider.id)"
+        >
+          <mat-icon>delete</mat-icon> Eliminar
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    }
+  </div>
+  <app-pagination
+    [currentPage]="liderList()!.current_page"
+    [lastPage]="liderList()!.last_page"
+    [links]="liderList()!.links"
+    [prevPageUrl]="liderList()!.prev_page_url"
+    [nextPageUrl]="liderList()!.next_page_url"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-pagination>
+</div>

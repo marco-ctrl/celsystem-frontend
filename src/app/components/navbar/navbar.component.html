@@ -1,0 +1,34 @@
+
+<mat-toolbar>
+  <button mat-icon-button class="menu-button" (click)="toggleSidenav.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  <mat-form-field class="search-bar">
+    <mat-label>Buscar</mat-label>
+    <input matInput type="text" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <span class="spacer"></span>
+  <div class="navbar-right">
+    <button mat-icon-button>
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    <button mat-button [matMenuTriggerFor]="menuPerfil" class="profile-button">
+      <img src="https://i.pravatar.cc/300" alt="Perfil" class="profile-img" />
+      <span class="profile-name">Juan Pérez</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+
+    <mat-menu #menuPerfil="matMenu">
+      <button mat-menu-item>
+        <mat-icon>person</mat-icon>
+        <span>Ver perfil</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

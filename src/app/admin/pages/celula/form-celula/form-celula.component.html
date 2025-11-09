@@ -1,0 +1,161 @@
+<h2 mat-dialog-title>Registrar Celula</h2>
+<form [formGroup]="celulaForm" (ngSubmit)="onSubmit()" autocomplete="off">
+  <mat-dialog-content class="max-h-[80vh] overflow-y-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Primera columna -->
+      <div class="col-span-1 space-y-6">
+        <!-- numero de celula -->
+
+        <app-lider-autocomplete (liderId)="selectLider($event)">
+          @if (isValidField('lider_id')) {
+          <mat-error>
+            <span
+              customLabel
+              [errors]="celulaForm.get('lider_id')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </app-lider-autocomplete>
+        <mat-form-field class="w-full">
+          <mat-label>Número de Celula</mat-label>
+          <input
+            id="number"
+            formControlName="number"
+            type="number"
+            matInput
+            placeholder="Numero de Celula"
+            [ngClass]="{ 'border-red-500': isValidField('number') }"
+            min="1"
+          />
+          @if (isValidField('number')) {
+          <mat-error>
+            <span
+              customLabel
+              [errors]="celulaForm.get('number')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- nombre de celula -->
+        <mat-form-field class="w-full">
+          <mat-label>Nombre de Celula</mat-label>
+          <input
+            id="name"
+            formControlName="name"
+            matInput
+            type="text"
+            placeholder="Nombre de Celula"
+            [ngClass]="{ 'border-red-500': isValidField('name') }"
+          />
+          @if (isValidField('name')) {
+          <mat-error class="invalid-text">
+            <span customLabel [errors]="celulaForm.get('name')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Segunda columna -->
+      <div class="col-span-1 space-y-6">
+        <div class="grid grid-cols-2">
+          <!-- dia de la semana -->
+          <div class="pr-1">
+            <mat-form-field class="w-full">
+              <mat-label>Día</mat-label>
+              <mat-select
+                id="name"
+                formControlName="day"
+                [ngClass]="{ 'border-red-500': isValidField('day') }"
+              >
+                @for (day of days; track day.id) {
+                <mat-option [value]="day.id">{{ day.name }}</mat-option>
+                }
+              </mat-select>
+              @if (isValidField('day')) {
+              <mat-error class="invalid-text">
+                <span
+                  customLabel
+                  [errors]="celulaForm.get('day')?.errors"
+                ></span>
+              </mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <!-- hora del dia -->
+          <div class="pl-1">
+            <mat-form-field class="w-full">
+              <mat-label>Hora</mat-label>
+              <input
+                matInput
+                id="hour"
+                type="time"
+                formControlName="hour"
+                placeholder="HH:mm"
+                [ngClass]="{ 'border-red-500': isValidField('hour') }"
+              />
+              @if (isValidField('hour')) {
+              <mat-error>
+                <span
+                  customLabel
+                  [errors]="celulaForm.get('hour')?.errors"
+                ></span>
+              </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Tipo Asistentes -->
+        <mat-form-field class="w-full">
+          <mat-label>Tipo Miembros</mat-label>
+          <mat-select
+            id="tipe"
+            formControlName="tipe"
+            [ngClass]="{ 'border-red-500': isValidField('tipe') }"
+          >
+            @for (tipe of tipes; track tipe.id) {
+            <mat-option [value]="tipe.id"
+              >{{ tipe.id }} : {{ tipe.name }}</mat-option
+            >
+            }
+          </mat-select>
+          @if (isValidField('tipe')) {
+          <mat-error class="invalid-text">
+            <span customLabel [errors]="celulaForm.get('tipe')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- direccion -->
+        <mat-form-field class="w-full">
+          <mat-label>Direccion</mat-label>
+          <textarea
+            id="addres"
+            formControlName="addres"
+            matInput
+            placeholder="Direccion de Celula"
+            rows="1"
+            [ngClass]="{ 'border-red-500': isValidField('addres') }"
+          ></textarea>
+          @if (isValidField('addres')) {
+          <mat-error class="invalid-text">
+            <span
+              customLabel
+              [errors]="celulaForm.get('addres')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+    <div id="map" style="height: 300px"></div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="mt-4 space-x-2">
+    <button mat-button color="warn" type="button" (click)="close()">
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" type="submit">Guardar</button>
+  </mat-dialog-actions>
+</form>

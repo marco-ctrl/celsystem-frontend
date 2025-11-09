@@ -1,0 +1,123 @@
+/* Contenedor principal */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* min-h-screen */
+  background-color: #1e3a8a; /* bg-blue-900 */
+  padding: 0 1rem; /* px-4 */
+}
+
+/* Tarjeta del login */
+.login-card {
+  width: 100%;
+  max-width: 28rem; /* max-w-md */
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Logo */
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo-img {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 9999px;
+  background-color: #374151;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Título */
+.login-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+/* Formulario */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Campos */
+.form-field {
+  width: 100%;
+}
+
+/* Botón */
+.login-button {
+  width: 100%;
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Pie */
+.login-footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 1.5rem;
+}
+
+.login-footer a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------ */
+/* Adaptaciones responsive */
+/* ------------------ */
+
+/* Pantallas pequeñas (móviles en vertical) */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem; /* Menos padding en pantallas chicas */
+  }
+
+  .logo-img {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .login-title {
+    font-size: 1.25rem; /* Un poco más pequeño */
+  }
+
+  .login-form {
+    gap: 1rem;
+  }
+}
+
+/* Pantallas medianas (tablets) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .login-card {
+    max-width: 24rem;
+    padding: 1.75rem;
+  }
+
+  .login-title {
+    font-size: 1.4rem;
+  }
+}
+
+/* Pantallas grandes (desktop) */
+@media (min-width: 1024px) {
+  .login-card {
+    max-width: 30rem;
+  }
+}

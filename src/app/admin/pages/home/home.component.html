@@ -1,0 +1,14 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+  @if (cards()){ 
+    @for (card of cards(); track $index) {
+      <app-card [class]="'border-'+card.color+'-500'">
+        <div card-icon>
+          <mat-icon class="text-2xl text-gray-700">{{ card.icon }}</mat-icon>
+        </div>
+        <div card-title>{{ card.title }}</div>
+        <div card-content class="text-2xl">{{ card.length }}</div>
+      </app-card>
+    } 
+  }
+</div>
+<app-charts />

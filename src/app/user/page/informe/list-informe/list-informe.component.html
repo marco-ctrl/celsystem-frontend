@@ -1,0 +1,188 @@
+<div class="p-4 max-w-7xl">
+  <!-- Encabezado de la tarjeta -->
+  <h2 class="text-2xl font-bold mb-4">Lista de Informes</h2>
+  <div class="flex mb-4">
+    <!-- Campo de búsqueda -->
+    <form
+      autocomplete="off"
+      [formGroup]="formSearch"
+      class="flex flex-row gap-3"
+    >
+      <mat-form-field class="md:w-full">
+        <mat-label>Buscar Celula</mat-label>
+        <input
+          matInput
+          placeholder="Ingrese descripción o estado"
+          formControlName="search"
+        />
+      </mat-form-field>
+      <div>
+        <a
+        mat-mini-fab title="Agregar informe" color="primary"
+        [routerLink]="['../create']"
+        routerLinkActive="router-link-active"
+      >
+      <mat-icon>add</mat-icon>
+      </a>
+      </div>
+    </form>
+  </div>
+  <!-- Tabla -->
+  <div class="overflow-x-auto sm:overflow-hidden">
+    @if (isLoading()){
+    <table class="table-custom">
+      <thead>
+        <tr>
+          @for (item of headersTable; track $index) {
+          <th [ngClass]="{ '': $index === 0 }">
+            {{ item | uppercase }}
+          </th>
+          }
+          <th>ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (informe of informes()?.data; track $index) {
+        <tr
+          [ngClass]="{
+            'bg-gray-200': $index % 2 === 0,
+            'bg-white': $index % 2 !== 0
+          }"
+        >
+          <td>{{ $index + 1 }}</td>
+          <td>{{ informe.celula.name | uppercase }}</td>
+          <td>
+            {{ informe.celula.lider?.name | uppercase }}
+            {{ informe.celula.lider?.lastname | uppercase }}
+          </td>
+          <td>
+            {{ informe.datetime }}
+          </td>
+          <td>
+            {{ informe.assistant_amount }}
+          </td>
+          <td>{{ informe.visit_amount }}</td>
+          <td>{{ informe.offering | appCurrencyBolivia }}</td>
+          <td
+            [ngClass]="{
+              'text-green-600': informe.status === 1,
+              'text-red-600': informe.status === 0
+            }"
+          >
+            {{ informe.status | appDataStatus }}
+          </td>
+          <td class="px-4 border-b whitespace-nowrap flex space-x-2">
+            <button
+              mat-mini-fab
+              (click)="downloadPdf(informe.id)"
+              color="bg-btn-success"
+              titulo="Descargar PDF"
+            ><mat-icon>download</mat-icon></button>
+            <!-- Botón Ver PDF -->
+            <button
+              mat-mini-fab
+              (click)="viewPdf(informe.id)"
+              color="bg-btn-info"
+              icon="picture_as_pdf"
+              titulo="Ver PDF"
+            >
+              <mat-icon>picture_as_pdf</mat-icon>
+            </button>
+
+            <!-- Botón Editar -->
+            <a
+              mat-mini-fab
+              color="primary"
+              [routerLink]="['../edit/' + informe.id]"
+              routerLinkActive="router-link-active"
+              title="Editar"
+            >
+              <mat-icon fontIcon="edit" />
+            </a>
+            <!-- Botón Eliminar -->
+            @if (informe.status == 1) {
+            <button
+              mat-mini-fab
+              (click)="onChangeStatus(informe.id, informe.status)"
+              title="Inhabilitar"
+              style="color: red;"
+            ><mat-icon>delete</mat-icon></button>
+
+            } @else {
+            <button
+            mat-mini-fab
+              (click)="onChangeStatus(informe.id, informe.status)"
+              title="Habilitar"
+              style="color: green;"
+            ><mat-icon>restore_from_trash</mat-icon></button>
+            }
+          </td>
+        </tr>
+        } @empty{
+        <tr>
+          <td align="center" colspan="5" class="py-4 text-gray-500">
+            No se encontraron datos que mostrar!
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    <!-- Versión vertical de la tabla para pantallas pequeñas -->
+    <div class="sm:hidden">
+      @for (informe of informes()?.data; track informe.id) {
+      <div class="card-list">
+        <p class="card-list-header">
+          #{{ $index + 1 }}
+          <span class="flex space-x-2">
+            <!-- Botón Editar -->
+            <a
+              class="btn-edit"
+              [routerLink]="['../edit/' + informe.id]"
+              routerLinkActive="router-link-active"
+              title="Editar"
+            >
+              <mat-icon fontIcon="edit" />
+            </a>
+            <!-- Botón Eliminar -->
+            @if (informe.status == 1) {
+            }
+          </span>
+        </p>
+        <p><span>Celula:</span> {{ informe.celula.name }}</p>
+        <p>
+          <span>Lider:</span> {{ informe.celula.lider?.name }}
+          {{ informe.celula.lider?.lastname }}
+        </p>
+        <p>
+          <span>Fecha y Hora:</span>
+          {{ informe.datetime }}
+        </p>
+        <p><span>Asistentes:</span> {{ informe.assistant_amount }}</p>
+        <p><span>Visitas:</span> {{ informe.visit_amount }}</p>
+        <p><span>Estado:</span> {{ informe.status | appDataStatus }}</p>
+      </div>
+      }@empty {
+      <p class="text-gray-500">No se encontraron datos que mostrar!</p>
+      }
+    </div>
+    } @else{
+    <div class="flex items-center justify-center h-16">
+      <div
+        class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"
+      ></div>
+    </div>
+    }
+  </div>
+  <app-pagination
+    [currentPage]="informes()!.current_page"
+    [lastPage]="informes()!.last_page"
+    [links]="informes()!.links"
+    [prevPageUrl]="informes()!.prev_page_url"
+    [nextPageUrl]="informes()!.next_page_url"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-pagination>
+
+  
+
+</div>

@@ -1,0 +1,85 @@
+/* Sidebar principal con animación */
+.sidebar {
+  width: 16rem; /* ancho fijo del sidebar */
+  background-color: #374151; /* gris oscuro */
+  color: #f3f4f6;
+  position: fixed;
+  top: 0;
+  left: -100%; /* inicia fuera de pantalla */
+  height: 100vh;
+  overflow-y: auto;
+  transition: left 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+  z-index: 1000;
+}
+
+/* Sidebar visible */
+.sidebar.open {
+  left: 0;
+  opacity: 1;
+}
+
+/* Encabezado del sidebar */
+.sidebar-header {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #4b5563;
+}
+
+/* Logo */
+.sidebar-logo {
+  height: 5rem;
+}
+
+/* Título */
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #f3f4f6;
+}
+
+/* Links del sidebar */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+}
+
+/* Texto de link */
+.sidebar-link-text {
+  margin-left: 0.5rem;
+}
+
+/* Hover en link */
+.sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(3px);
+}
+
+/* Título de panel */
+.sidebar-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Estado activo */
+.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ------------------- */
+/* Responsive: ocultar sidebar en móviles por defecto */
+/* ------------------- */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 14rem;
+  }
+}

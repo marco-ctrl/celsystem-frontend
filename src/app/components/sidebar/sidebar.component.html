@@ -1,0 +1,38 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/images/logo.png" alt="Logo" class="sidebar-logo" />
+    <span class="sidebar-title">MRF System</span>
+  </div>
+
+  <mat-nav-list>
+    @for (item of sidebarItems(); track $index) {
+      @if (!item.subItems) {
+        <a
+          mat-list-item
+          [routerLink]="item.url"
+          routerLinkActive="active"
+          class="sidebar-link"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span class="sidebar-link-text">{{ item.title }}</span>
+        </a>
+      }
+      @if (item.subItems) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="sidebar-panel-title">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              {{ item.title }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-action-list>
+            @for (subItem of item.subItems; track $index) {
+              <a mat-list-item [routerLink]="subItem.url">{{ subItem.title }}</a>
+            }
+          </mat-action-list>
+        </mat-expansion-panel>
+      }
+    }
+  </mat-nav-list>
+</div>

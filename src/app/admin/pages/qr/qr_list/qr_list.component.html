@@ -1,0 +1,190 @@
+<div class="p-4 max-w-7xl">
+  <h2 class="text-2xl font-bold mb-4">Images Qr</h2>
+  <!-- Search Bar -->
+
+  <div class="mb-4">
+    <form
+      autocomplete="off"
+      [formGroup]="formSearch"
+      class="flex flex-row gap-2"
+    >
+      <mat-form-field class="md:w-1/3 pr-1">
+        <mat-label>Buscar Imagen Qr</mat-label>
+        <input
+          matInput
+          placeholder="Ingrese descripción o estado"
+          formControlName="search"
+          (keyup)="onSearch()"
+        />
+      </mat-form-field>
+      <div>
+        <button
+          mat-mini-fab
+          title="Agregar Lider"
+          color="primary"
+          (click)="openCustomerForm()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Responsive Table -->
+  <div class="hidden md:block">
+    <mat-table [dataSource]="dataSource" class="w-full" matSort>
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+        <mat-cell *matCellDef="let qrImage">{{ qrImage.id }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Descripcion</mat-header-cell
+        >
+        <mat-cell *matCellDef="let qrImage">{{ qrImage.description }}</mat-cell>
+      </ng-container>
+
+      <!-- Category Column -->
+      <ng-container matColumnDef="valid_from">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Valido Desde</mat-header-cell
+        >
+        <mat-cell *matCellDef="let qrImage">{{
+          qrImage.valid_from | date : "short"
+        }}</mat-cell>
+      </ng-container>
+
+      <!-- Price Column -->
+      <ng-container matColumnDef="expired">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Expira</mat-header-cell
+        >
+        <mat-cell *matCellDef="let qrImage">{{
+          qrImage.expired | date : "short"
+        }}</mat-cell>
+      </ng-container>
+
+      <!-- Image Column -->
+      <ng-container matColumnDef="image">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Imagen</mat-header-cell
+        >
+        <mat-cell *matCellDef="let qrImage">
+          <img
+            [src]="qrImage.image | appImageProfile"
+            alt="QR Image"
+            class="w-16 h-16 object-cover rounded"
+            (click)="openImageModal(qrImage)"
+          />
+        </mat-cell>
+      </ng-container>
+
+      <!-- Amount Column -->
+      <ng-container matColumnDef="amount">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Cantidad</mat-header-cell
+        >
+        <mat-cell *matCellDef="let qrImage">{{ qrImage.amount }}</mat-cell>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Estado</mat-header-cell
+        >
+        <mat-cell *matCellDef="let qrImage">
+          <span
+            [ngClass]="{
+              'text-green-500': qrImage.status === 1,
+              'text-red-500': qrImage.status === 0
+            }"
+          >
+            {{ qrImage.status === 1 ? "Activo" : "Inactivo" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let qrImage">
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="editCustomer(qrImage)"
+            title="Editar"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="deleteCustomer(qrImage.id)"
+            title="Eliminar Cliente"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+
+  <!-- Responsive Cards for Small Screens -->
+  <div class="block md:hidden">
+    <div
+      *ngFor="let customer of dataSource.filteredData"
+      class="bg-white rounded-lg shadow-md p-4 mb-4"
+    >
+      <p><strong>ID:</strong> {{ customer.id }}</p>
+      <p><strong>Nombre:</strong> {{ customer.name }}</p>
+      <p><strong>Apellido:</strong> {{ customer.last_name }}</p>
+      <p><strong>Telefono:</strong> {{ customer.phone }}</p>
+
+      <p>
+        <strong>Estado:</strong>
+        <span
+          [ngClass]="{
+            'text-green-500': customer.status === 1,
+            'text-red-500': customer.status === 0
+          }"
+        >
+          {{ customer.status === 1 ? "Activo" : "Inactivo" }}
+        </span>
+      </p>
+      <div class="flex justify-end space-x-2">
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="editCustomer(customer)"
+          title="Editar"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="deleteCustomer(customer.id)"
+          title="Eliminar"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-pagination
+    [currentPage]="qrImages()!.current_page"
+    [lastPage]="qrImages()!.last_page"
+    [links]="qrImages()!.links"
+    [prevPageUrl]="qrImages()!.prev_page_url"
+    [nextPageUrl]="qrImages()!.next_page_url"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-pagination>
+</div>

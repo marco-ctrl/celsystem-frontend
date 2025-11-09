@@ -1,0 +1,74 @@
+<div class="justify-between items-center mt-2 p-4 border rounded-lg bg-white shadow-md hidden md:flex">
+    <span class="text-gray-700">Página {{ currentPage }} de {{ lastPage }}</span>
+  
+    <div class="flex items-center gap-2">
+      <!-- Botón de página anterior -->
+      <button 
+        mat-raised-button 
+        color="primary" 
+        [disabled]="!prevPageUrl" 
+        (click)="changePage(currentPage - 1)"
+        class="px-3 py-1">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+  
+      <!-- Páginas intermedias -->
+      <ng-container *ngFor="let link of links; let index = index">
+        @if(index != 0 && index != links.length - 1) { 
+          <button
+            [class.bg-blue-500]="link.active"
+            [class.text-white]="link.active"
+            [class.border]="!link.active"
+            [disabled]="!link.url"
+            (click)="changePageByUrl(link.url)"
+            class="px-3 py-1 rounded-lg"
+            [class]="
+              link.active
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-800 cursor-pointer hover:bg-gray-300 transition ease-in-out duration-150'
+            ">
+            {{ link.label }}
+          </button>
+
+        } 
+      </ng-container>
+  
+      <!-- Botón de página siguiente -->
+      <button 
+        mat-raised-button 
+        color="primary" 
+        [disabled]="!nextPageUrl" 
+        (click)="changePage(currentPage + 1)"
+        class="px-3 py-1">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+  
+
+<div class="flex items-center justify-end gap-2 p-4 bg-white shadow-md rounded-md border md:hidden">
+    <!-- Botón de página anterior -->
+    <button 
+      mat-icon-button 
+      [disabled]="!prevPageUrl" 
+      (click)="changePage(currentPage - 1)" 
+      matTooltip="Página anterior"
+      class="hover:bg-gray-100"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  
+    <span class="hidden sm:inline text-gray-700">Página {{ currentPage }} de {{ lastPage }}</span>
+  
+    <!-- Botón de página siguiente -->
+    <button 
+      mat-icon-button 
+      [disabled]="!nextPageUrl" 
+      (click)="changePage(currentPage + 1)" 
+      matTooltip="Página siguiente"
+      class="hover:bg-gray-100"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  

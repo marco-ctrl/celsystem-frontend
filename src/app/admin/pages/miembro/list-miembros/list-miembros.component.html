@@ -1,0 +1,158 @@
+<div class="p-4 max-w-7xl">
+  <h2 class="text-2xl font-bold mb-4">Gestión Membresia</h2>
+  <!-- Contenedor principal como tarjeta flotante -->
+  <!-- <div class="bg-white rounded-2xl shadow-lg p-6"> -->
+  <!-- Search Bar -->
+  <div class="mb-4">
+    <form
+      autocomplete="off"
+      [formGroup]="formSearch"
+      class="flex flex-row gap-2"
+    >
+      <mat-form-field class="md:w-1/3 pr-1">
+        <mat-label>Buscar Membresia</mat-label>
+        <input
+          matInput
+          placeholder="Ingrese descripción o estado"
+          formControlName="search"
+          (keyup)="onSearch()"
+        />
+      </mat-form-field>
+      <div>
+        <button mat-mini-fab title="Agregar Miembro" color="primary" (click)="openMiembroForm()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  @if (isLoading()){
+  <!-- Responsive Table -->
+  <div class="hidden md:block">
+    <mat-table [dataSource]="dataSource" class="w-full">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+        <mat-cell *matCellDef="let member">{{ member.id }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Nombre -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+        <mat-cell *matCellDef="let member">{{ member.name }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Apellido -->
+      <ng-container matColumnDef="lastname">
+        <mat-header-cell *matHeaderCellDef>Apellido</mat-header-cell>
+        <mat-cell *matCellDef="let member">{{ member.lastname }}</mat-cell>
+      </ng-container>
+
+      <!-- contacto  -->
+      <ng-container matColumnDef="contact">
+        <mat-header-cell *matHeaderCellDef>Contacto</mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          {{ member.contact }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Email  -->
+      <ng-container matColumnDef="celula">
+        <mat-header-cell *matHeaderCellDef>Celula</mat-header-cell>
+        <mat-cell *matCellDef="let member">{{ member.celula?.name }}</mat-cell>
+      </ng-container>
+
+      <!-- Email  -->
+      <ng-container matColumnDef="tipe">
+        <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
+        <mat-cell *matCellDef="let member">{{
+          member.tipe | appTipeMember
+        }}</mat-cell>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <span
+            [ngClass]="{
+              'text-green-500': member.status === 1,
+              'text-red-500': member.status === 0
+            }"
+          >
+            {{ member.status === 1 ? "Activo" : "Inactivo" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <button mat-icon-button color="primary" title="editar Lider" (click)="editMember(member) ">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" title="dar baja Lider" (click)="onChangeStatus(member.id, member.status)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+
+  <!-- Responsive Cards for Small Screens -->
+  <div class="block md:hidden">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      @for (member of members()!.data; track $index) {
+      <mat-card class="mb-4">
+        <mat-card-header>
+          <mat-card-title
+            >{{ member.name }} {{ member.lastname }}</mat-card-title
+          >
+          <mat-card-subtitle>{{ member.celula?.name }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="mt-2">
+          <p><strong>Tipo:</strong> {{ member.tipe | appTipeMember }}</p>
+          <p><strong>Contacto:</strong> {{ member.contact }}</p>
+          <p><strong>Estado:</strong> {{ member.status | appDataStatus }}</p>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions>
+          <button
+            mat-button
+            mat-raised
+            color="primary"
+            title="editar Membresia"
+          >
+            <mat-icon>edit</mat-icon> Editar
+          </button>
+          <span class="spacer"></span>
+          <button mat-button mat-raised color="warn" title="dar baja Membresia">
+            <mat-icon>delete</mat-icon> Eliminar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      }
+    </div>
+  </div>
+  } @else {
+  <div class="flex justify-center items-center h-64">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+  }
+  <app-pagination
+    [currentPage]="members()!.current_page"
+    [lastPage]="members()!.last_page"
+    [links]="members()!.links"
+    [prevPageUrl]="members()!.prev_page_url"
+    [nextPageUrl]="members()!.next_page_url"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-pagination>
+</div>

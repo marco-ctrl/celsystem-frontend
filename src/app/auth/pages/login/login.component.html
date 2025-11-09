@@ -1,0 +1,44 @@
+<div class="login-container">
+  <div class="login-card">
+    
+    <!-- Logo -->
+    <div class="login-logo">
+      <img src="assets/images/logo.png" alt="Logo" class="logo-img">
+    </div>
+
+    <!-- Título -->
+    <h2 class="login-title">Iniciar Sesión</h2>
+
+    <!-- Formulario -->
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
+      
+      <!-- Usuario -->
+      <mat-form-field class="form-field">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput placeholder="ejemplo@correo.com" formControlName="email">
+        <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          Email inválido
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Contraseña -->
+      <mat-form-field class="form-field">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="********">
+        <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          Contraseña requerida
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Botón -->
+      <button mat-button mat-flat-button color="primary" class="login-button">
+        Ingresar
+      </button>
+    </form>
+
+    <!-- Pie -->
+    <p class="login-footer">
+      ¿No tienes cuenta? <a href="#">Regístrate</a>
+    </p>
+  </div>
+</div>

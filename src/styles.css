@@ -1,1 +1,330 @@
+@import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
+
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Barra principal */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  /* justify-between */
+  align-items: center;
+  /* items-center */
+  padding: 0.75rem 1rem;
+  /* px-4 py-3 */
+  background-color: #1f2937;
+  /* bg-gray-800 */
+  color: #f3f4f6;
+  /* text-gray-200 */
+}
+
+/* Contenedor izquierdo */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* gap-2 */
+}
+
+/* Botón de menú solo visible en móviles */
+.menu-button {
+  display: block;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+  width: 16rem;
+  /* w-64 */
+  margin-top: 1rem;
+  /* mt-4 */
+  padding-top: 0.5rem;
+  /* pt-2 */
+  display: none;
+  /* hidden por defecto */
+}
+
+/* Contenedor derecho */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  /* gap-4 */
+}
+
+/* Botón de perfil */
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* gap-2 */
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover botón de perfil */
+.profile-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Imagen de perfil */
+.profile-img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover imagen de perfil */
+.profile-button:hover .profile-img {
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Nombre del perfil */
+.profile-name {
+  display: none;
+}
+
+/* Botones de iconos */
+.navbar-right button[mat-icon-button] {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border-radius: 50%;
+}
+
+/* Hover iconos */
+.navbar-right button[mat-icon-button]:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
+}
+
+/* ------------------- */
+/* Adaptaciones responsive */
+/* ------------------- */
+
+/* Tablet y escritorio */
+@media (min-width: 640px) {
+  .search-bar {
+    display: block;
+  }
+
+  .menu-button {
+    display: none;
+  }
+
+  .profile-name {
+    display: inline;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.content-center {
+  display: flex;
+  align-items: center;
+  /* Centra verticalmente dentro del mat-sidenav-content */
+  justify-content: center;
+  /* Centra horizontalmente */
+  /*height: 100%;*/
+  /* Ocupar el alto disponible */
+  width: 100%;
+  /* Ocupar todo el ancho */
+  padding: 1rem;
+  /* Espaciado interno para que no pegue a los bordes */
+  box-sizing: border-box;
+  /* Incluye padding en el ancho total */
+}
+
+.content-box {
+  width: 100%;
+  max-width: 1100px;
+  /* 🔹 Ajusta este valor según tu diseño */
+  background: #fff;
+  /* Opcional: un fondo para diferenciar */
+  border-radius: 12px;
+  /* Bordes redondeados */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  /* Sombra sutil */
+  padding: 2rem;
+  /* Espaciado interno del contenido */
+  transition: all 0.3s ease;
+  /* 🔹 Transición suave en hover */
+}
+
+.content-box:hover {
+  transform: translateY(-4px);
+  /* Efecto de flotación */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Título */
+.page-title {
+  font-size: 1.5rem;
+  /* text-2xl */
+  font-weight: bold;
+  /* font-bold */
+  margin-bottom: 1rem;
+  /* mb-4 */
+}
+
+/* Contenedor principal tipo tarjeta */
+.card-container {
+  background: #fff;
+  border-radius: 1rem;
+  /* rounded-2xl */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  /* shadow-lg */
+  padding: 1.5rem;
+  /* p-6 */
+}
+
+/* Barra de búsqueda */
+.search-bar {
+  margin-bottom: 1rem;
+  /* mb-4 */
+}
+
+.search-field {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .search-field {
+    width: 33%;
+  }
+}
+
+/* Tabla responsive */
+.table-wrapper {
+  display: none;
+  /* hidden en mobile */
+}
+
+.table {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .table-wrapper {
+    display: block;
+    /* visible en desktop */
+  }
+}
+
+/* Cards responsive */
+.cards-wrapper {
+  display: block;
+  /* visible en mobile */
+}
+
+@media (min-width: 768px) {
+  .cards-wrapper {
+    display: none;
+    /* oculto en desktop */
+  }
+}
+
+.card {
+  background: #fff;
+  border-radius: 0.75rem;
+  /* rounded-lg */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  /* p-4 */
+  margin-bottom: 1rem;
+  /* mb-4 */
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Acciones en cards */
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  /* space-x-2 */
+}
+
+/* Estados */
+.status-active {
+  color: #22c55e;
+  /* verde */
+}
+
+.status-inactive {
+  color: #ef4444;
+  /* rojo */
+}
+
+/* Hacer que las columnas se adapten al contenido */
+mat-table {
+  width: 100%;
+  table-layout: auto !important;
+  /* importante: cambia de fixed a auto */
+  border-collapse: collapse;
+  /* opcional: para mejor alineación */
+}
+
+/* Celdas y encabezados con padding mínimo */
+mat-header-cell,
+mat-cell {
+  padding: 8px 12px;
+  white-space: nowrap;
+  /* evita saltos de línea en texto corto */
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Ajustar columna foto */
+mat-cell img {
+  max-width: 50px;
+  height: auto;
+  border-radius: 50%;
+}
+
+/* Columna acciones con botones alineados */
+mat-cell button {
+  margin-right: 4px;
+}
+
+/* styles.css o tailwind.css */
+@layer components {
+  .table-custom {
+    @apply min-w-full bg-white border border-gray-200 text-sm sm:table hidden
+  }
+
+  .table thead {
+    @apply bg-gray-800 text-white
+  }
+
+  .table thead th {
+    @apply py-2 px-4 text-center
+  }
+
+  .table tbody td {
+    @apply py-2 px-4 border-b text-center
+  }
+
+  ::ng-deep .custom-dialog-container .mat-mdc-dialog-container {
+    @apply rounded-2xl shadow-2xl bg-white;
+  }
+}

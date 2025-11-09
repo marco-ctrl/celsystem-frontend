@@ -1,0 +1,160 @@
+<div class="p-4 max-w-7xl">
+  <!-- Encabezado de la tarjeta -->
+  <h2 class="text-2xl font-bold mb-4">Gestión de Celulas</h2>
+  <div class="flex mb-4">
+    <!-- Campo de búsqueda -->
+    <form
+      autocomplete="off"
+      [formGroup]="formSearch"
+      class="flex flex-row gap-3"
+    >
+      <mat-form-field class="md:w-full">
+        <mat-label>Buscar Celula</mat-label>
+        <input
+          matInput
+          placeholder="Ingrese descripción o estado"
+          formControlName="search"
+          (keyup)="onSearch()"
+        />
+      </mat-form-field>
+      <div>
+        
+        <button mat-mini-fab title="Agregar Lider" color="primary" (click)="openCelulaForm()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla -->
+  @if (isLoading()){
+  <div class="hidden md:block">
+    <mat-table [dataSource]="dataSource" class="w-full">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+        <mat-cell *matCellDef="let celula">{{ celula.id }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="nombre">
+        <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+        <mat-cell *matCellDef="let celula">{{ celula.name }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Nombre -->
+      <ng-container matColumnDef="numero">
+        <mat-header-cell *matHeaderCellDef>Numero</mat-header-cell>
+        <mat-cell *matCellDef="let celula">{{ celula.number }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Apellido -->
+      <ng-container matColumnDef="dia">
+        <mat-header-cell *matHeaderCellDef>Día</mat-header-cell>
+        <mat-cell *matCellDef="let celula">{{
+          celula.day | appDayWeek
+        }}</mat-cell>
+      </ng-container>
+
+      <!-- contacto  -->
+      <ng-container matColumnDef="hora">
+        <mat-header-cell *matHeaderCellDef>Hora</mat-header-cell>
+        <mat-cell *matCellDef="let celula">
+          {{ celula.hour }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Email  -->
+      <ng-container matColumnDef="lider">
+        <mat-header-cell *matHeaderCellDef>Lider</mat-header-cell>
+        <mat-cell *matCellDef="let celula">
+          {{ celula.lider.name }} {{ celula.lider.lastname }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="estado">
+        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+        <mat-cell *matCellDef="let celula">
+          <span
+            [ngClass]="{
+              'text-green-500': celula.status === 1,
+              'text-red-500': celula.status === 0
+            }"
+          >
+            {{ celula.status === 1 ? "Activo" : "Inactivo" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let celula">
+          <button mat-icon-button color="primary" title="editar Lider" (click)="editCelula(celula)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" title="dar baja Lider" (click)="onChangeStatus(celula.id, celula.status)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+
+  <!-- Versión vertical de la tabla para pantallas pequeñas -->
+  <div class="md:hidden">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      @for (celula of celulas()?.data; track celula.id) {
+      <mat-card class="mb-4">
+        <mat-card-header>
+          <mat-card-title>#{{ celula.id }} </mat-card-title>
+          <mat-card-subtitle>{{ celula.name }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="mt-2">
+          <h4>Numero: {{ celula.number }}</h4>
+          <p>
+            <strong>Día:</strong> {{ celula.day | appDayWeek }} <br />
+            <strong>Hora:</strong> {{ celula.hour }} <br />
+            <strong>Lider:</strong> {{ celula.lider!.name }}
+            {{ celula.lider!.lastname }}
+            <br />
+          </p>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions>
+          <button mat-button mat-raised color="primary" title="editar Lider" (click)="editCelula(celula)">
+            <mat-icon>edit</mat-icon> Editar
+          </button>
+          <span class="spacer"></span>
+          <button mat-button mat-raised color="warn" title="dar baja Lider">
+            <mat-icon>delete</mat-icon> Eliminar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      }@empty {
+      <p class="text-gray-500">No se encontraron datos que mostrar!</p>
+      }
+    </div>
+  </div>
+  } @else{
+  <div class="flex items-center justify-center h-16">
+    <div
+      class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"
+    ></div>
+  </div>
+  }
+  <app-pagination
+    [currentPage]="celulas()!.current_page"
+    [lastPage]="celulas()!.last_page"
+    [links]="celulas()!.links"
+    [prevPageUrl]="celulas()!.prev_page_url"
+    [nextPageUrl]="celulas()!.next_page_url"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-pagination>
+</div>

@@ -1,0 +1,77 @@
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #sidenav mode="push">
+    <div class="sidebar-header">
+      <img src="assets/images/logo.png" alt="Logo" class="sidebar-logo" />
+      <span class="sidebar-title">MRF System</span>
+    </div>
+
+    <mat-nav-list>
+      @for (item of itemSideBar; track $index) {
+        @if (!item.subItems) {
+          <mat-list-item [routerLink]="item.url" (click)="sidenav.toggle()">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        {{ item.title }}
+      </mat-list-item>
+      
+        }
+      @if (item.subItems) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>{{ item.icon }}</mat-icon>
+            {{ item.title }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-action-list>
+          @for (subItem of item.subItems; track $index) {
+          <a mat-list-item [routerLink]="subItem.url">{{ subItem.title }}</a>
+          }
+        </mat-action-list>
+      </mat-expansion-panel>
+      } }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-toolbar style="background-color: #4b5563;">
+    <button mat-icon-button (click)="sidenav.toggle()" style="color: azure; background-color: #6c7177;">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-form-field class="search-bar ml-4 mt-2">
+      <mat-label>Buscar</mat-label>
+      <input matInput type="text" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <span class="spacer"></span>
+    <div class="navbar-right">
+      <button mat-icon-button style="color: azure; background-color: #6c7177;">
+        <mat-icon>notifications</mat-icon>
+      </button>
+      <span class="text-white text-sm hidden sm:block">{{ userName }}</span>
+      <button
+        mat-button
+        [matMenuTriggerFor]="menuPerfil"
+        class="profile-button"
+        style="color: azure;"
+      >
+        <img [src]="user()?.lider!.foto | appImageProfile" alt="Perfil" class="profile-img" />
+        <mat-icon>expand_more</mat-icon>
+      </button>
+      <mat-menu #menuPerfil="matMenu">
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>Ver perfil</span>
+        </button>
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+  <div class="content-center">
+    <div class="content-box">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</mat-sidenav-container>

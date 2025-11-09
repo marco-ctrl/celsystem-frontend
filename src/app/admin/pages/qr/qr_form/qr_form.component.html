@@ -1,0 +1,110 @@
+<h2 mat-dialog-title>Registrar Imagen Qr</h2>
+<form [formGroup]="qrImageForm" (ngSubmit)="onSubmit()" autocomplete="off">
+  <mat-dialog-content class="max-h-[80vh] overflow-y-auto">
+    <!-- Fecha de Nacimiento -->
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>Valido Desde</mat-label>
+      <input
+        formControlName="valid_from"
+        matInput
+        [matDatepicker]="picker"
+        [min]="minDate"
+        [max]="maxDate"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      @if (isValidField('valid_from')) {
+      <mat-error>
+        <span
+          customLabel
+          [errors]="qrImageForm.get('valid_from')?.errors"
+        ></span>
+      </mat-error>
+      }
+    </mat-form-field>
+    <!-- Fecha de Expiracion -->
+
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>Expira</mat-label>
+      <input
+        formControlName="expired"
+        matInput
+        [matDatepicker]="picker2"
+        [min]="minDate"
+        [max]="maxDate"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker2"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+      @if (isValidField('expired')) {
+      <mat-error>
+        <span customLabel [errors]="qrImageForm.get('expired')?.errors"></span>
+      </mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Amount -->
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>Monto</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="amount"
+        placeholder="Ingrese un monto"
+      />
+      @if (isValidField('amount')) {
+      <mat-error>
+        <span customLabel [errors]="qrImageForm.get('amount')?.errors"></span>
+      </mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Descripcion -->
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>Descripción</mat-label>
+      <input
+        matInput
+        formControlName="description"
+        placeholder="Ingrese una descripción"
+      />
+      @if (isValidField('description')) {
+      <mat-error>
+        <span
+          customLabel
+          [errors]="qrImageForm.get('description')?.errors"
+        ></span>
+      </mat-error>
+      }
+    </mat-form-field>
+    <!-- Imagen -->
+    <div class="mb-4">
+      <label class="block mb-2 font-medium text-gray-700">Imagen QR</label>
+      <input type="file" (change)="onFileChange($event)" accept="image/*" />
+      <!-- @if (isValidField('image')) {
+      <mat-error>
+        <span customLabel [errors]="qrImageForm.get('image')?.errors"></span>
+      </mat-error>
+    }-->
+    </div>
+    <!-- Vista previa de la imagen -->
+    <div *ngIf="previewUrl()" class="mb-4">
+      <label class="block mb-2 font-medium text-gray-700">Vista Previa:</label>
+      <img [src]="previewUrl()" alt="Vista Previa" class="max-w-xs border" />
+    </div>
+    <div *ngIf="data?.image" class="mb-4">
+      <label class="block mb-2 font-medium text-gray-700">Imagen Actual:</label>
+      <img [src]="data?.image | appImageProfile" alt="" class="max-w-xs border" />
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="mt-4 space-x-2">
+    <button mat-button color="warn" type="button" (click)="close()">
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" type="submit">Guardar</button>
+  </mat-dialog-actions>
+</form>

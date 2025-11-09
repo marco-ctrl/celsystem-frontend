@@ -1,0 +1,650 @@
+<!-- <div class="max-w-5xl mx-auto p-4 bg-white shadow-lg rounded-lg"> -->
+<h2 class="text-xl font-bold text-gray-800 text-center mb-4">
+  {{ titulo() }} Informe
+</h2>
+<hr />
+<mat-stepper
+  linear
+  #stepper
+  [orientation]="(stepperOrientation | async)!"
+  class="mt-3"
+>
+  <!-- form informe -->
+  <mat-step [stepControl]="informeForm" [editable]="isEditable">
+    <form [formGroup]="informeForm" enctype="multipart/form-data">
+      <ng-template matStepLabel>Datos de Celula</ng-template>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        <!-- Primera columna -->
+        <div class="col-span-1 space-y-6">
+          <!-- seleccionar celula -->
+          <div>
+          </div>
+
+          @if (celulaValue()) {
+          <div class="data">
+            <span class="border-title text-gray-600">Datos de Celula</span>
+            <p><strong>Nombre: </strong>{{ celulaValue()?.name }}</p>
+            <p><strong>Numero: </strong>{{ celulaValue()?.number }}</p>
+            <p>
+              <strong>Lider: </strong
+              >{{ celulaValue()?.lider?.name | uppercase }}
+              {{ celulaValue()?.lider?.lastname | uppercase }}
+            </p>
+            <br />
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Direccion</mat-label>
+                <textarea
+                  id="addres"
+                  formControlName="addres"
+                  matInput
+                  placeholder="addres"
+                  [ngClass]="{ 'border-red-500': isValidField('addres') }"
+                >
+                </textarea>
+                @if (isValidField('addres')) {
+                <mat-error>
+                  <span
+                    customLabel
+                    [errors]="informeForm.get('addres')?.errors"
+                  ></span>
+                </mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Segunda columna -->
+        <div class="space-y-6">
+          <div class="space-y-2">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="fileInput.click()"
+            >
+              Seleccionar Foto
+            </button>
+            <input
+              #fileInput
+              id="photo"
+              formControlName="photo"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              (change)="onFileSelected($event)"
+            />
+            <img
+              *ngIf="previewUrl()"
+              [src]="previewUrl()"
+              alt="Preview"
+              class="w-full h-auto rounded-md shadow-md"
+            />
+            <mat-error *ngIf="isValidField('photo')">
+              <span
+                customLabel
+                [errors]="informeForm.get('photo')?.errors"
+              ></span>
+            </mat-error>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button mat-button color="warn" (click)="cancelar()">Cancelar</button>
+        <button mat-button matStepperNext (click)="validFormInforme()">
+          Siguiente
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- form ofrenda -->
+  <mat-step
+    [stepControl]="ofrendaForm"
+    label="Ofrenda"
+    [editable]="isEditable"
+    [optional]="!isOptional"
+  >
+    <form [formGroup]="ofrendaForm" enctype="multipart/form-data">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        <!-- Primera columna -->
+        <div class="col-span-1 space-y-6">
+          <!-- seleccionar tipo ofrenda -->
+          <mat-form-field class="w-full">
+            <mat-label>Tipo de Ofrenda</mat-label>
+            <mat-select
+              formControlName="type"
+              (selectionChange)="onTypeChange($event.value)"
+              [ngClass]="{ 'border-red-500': isValidFieldOfrenda('type') }"
+            >
+              <mat-option value="" disabled>Seleccione una opción</mat-option>
+              @for (option of tipesOfrenda; track $index) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+            @if (isValidFieldOfrenda('type')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="ofrendaForm.get('type')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="w-full">
+            <mat-label>Ofrenda</mat-label>
+            <input
+              id="amount"
+              formControlName="amount"
+              type="number"
+              matInput
+              placeholder="Ofrenda"
+              [ngClass]="{ 'border-red-500': isValidFieldOfrenda('amount') }"
+              min="0"
+            />
+            @if (isValidFieldOfrenda('amount')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="ofrendaForm.get('amount')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+          @if( showQrColumn()) {
+            <input
+              type="file"
+              accept="image/*"
+              formControlName="voucher"
+              [ngClass]="{ 'border-red-500': isValidFieldOfrenda('voucher') }"
+              (change)="onVoucherSelected($event)"
+            />
+          }
+        </div>
+
+        <!-- Segunda columna -->
+        <div class="space-y-6">
+          <div class="space-y-2">
+            @if (showQrColumn()) {
+            <div
+              class="relative w-full aspect-square rounded-md shadow-md overflow-hidden"
+            >
+              <!-- Imagen -->
+              <img
+                *ngIf="previewQrImage()"
+                [src]="previewQrImage()"
+                alt="Preview"
+                class="w-full h-full object-cover"
+              />
+
+              <!-- Botones encima -->
+              <div class="absolute top-2 right-2 flex gap-2">
+                <button
+                  mat-mini-fab
+                  color="primary"
+                  title="Ver imagen"
+                  (click)="openImageModal(this.qrImageValue()!)"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button
+                  mat-mini-fab
+                  color="accent"
+                  aria-label="Descargar imagen"
+                  title="Descargar imagen"
+                  (click)="downloadQrImage()"
+                >
+                  <mat-icon>download</mat-icon>
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button mat-button matStepperPrevious>Atras</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- form asistencia -->
+  <mat-step
+    [stepControl]="asistenciaForm"
+    label="Ubicacion"
+    [editable]="isEditable"
+    [optional]="isOptional"
+  >
+    <div id="map" style="height: 300px" class="mt-3 pt-3"></div>
+    <div class="mt-4">
+      <button mat-button matStepperPrevious>Atras</button>
+      <button mat-button matStepperNext>Siguiente</button>
+    </div>
+  </mat-step>
+  <!-- form asistencia -->
+  <mat-step
+    [stepControl]="asistenciaForm"
+    label="Asistencia"
+    [editable]="isEditable"
+    [optional]="isOptional"
+  >
+    <h4>Agregar Asistencia</h4>
+    <form [formGroup]="asistenciaForm" autocomplete="off">
+      <div class="flex flex-wrap -mx-2 mt-4 mb-4">
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2">
+          <mat-form-field class="w-full">
+            <mat-label>Nombre</mat-label>
+            <input
+              id="name"
+              #name
+              formControlName="name"
+              type="text"
+              matInput
+              placeholder="Nombre"
+              [ngClass]="{ 'border-red-500': isValidFieldAsistencia('name') }"
+              min="0"
+              [matAutocomplete]="auto"
+              (input)="searchAsistente()"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onSelectedOptionAsistente($event)"
+            >
+              @for (miembro of miembrosValue(); track $index) {
+              <mat-option [value]="miembro">
+                {{ miembro.name }} {{ miembro.lastname }}
+              </mat-option>
+              }
+            </mat-autocomplete>
+
+            @if (isValidFieldAsistencia('name')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="asistenciaForm.get('name')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2">
+          <mat-form-field class="w-full">
+            <mat-label>Apellido</mat-label>
+            <input
+              id="lastname"
+              formControlName="lastname"
+              type="text"
+              matInput
+              placeholder="Apellido"
+              [ngClass]="{
+                'border-red-500': isValidFieldAsistencia('lastname')
+              }"
+              min="0"
+            />
+            @if (isValidFieldAsistencia('lastname')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="asistenciaForm.get('lastname')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2">
+          <mat-form-field class="w-full">
+            <mat-label>Contacto</mat-label>
+            <input
+              id="contact"
+              formControlName="contact"
+              type="tel"
+              matInput
+              placeholder="Numero Contacto"
+              [ngClass]="{
+                'border-red-500': isValidFieldAsistencia('contact')
+              }"
+              min="0"
+            />
+            @if (isValidFieldAsistencia('contact')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="asistenciaForm.get('contact')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2 flex items-start">
+          <button
+            mat-fab
+            aria-label="Agregar Asistencia"
+            (click)="addAsistencia()"
+            title="Agregar Asistencia"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+      <hr />
+      <div class="hidden md:block">
+        @if(asisteciaValue()?.length){
+
+        <table
+          mat-table
+          [dataSource]="asisteciaValue()!"
+          class="mat-elevation-z8 demo-table"
+        >
+          <!-- Position Column -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-position">
+              No.
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element; let i = index"
+              class="mat-column-position"
+            >
+              {{ i + 1 }}
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.name | uppercase }}
+            </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="lastname">
+            <th mat-header-cell *matHeaderCellDef>Apellido</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.lastname | uppercase }}
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="contact">
+            <th mat-header-cell *matHeaderCellDef>Numero Contacto</th>
+            <td mat-cell *matCellDef="let element">{{ element.contact }}</td>
+          </ng-container>
+
+          <!-- remove Column -->
+          <ng-container matColumnDef="remove">
+            <th mat-header-cell *matHeaderCellDef>Quitar</th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <!-- <app-button-delete
+                  (click)="removeRowAsistencia(i)"
+                  color="bg-btn-danger"
+                  icon="delete"
+                  titulo="Quitar"
+                />-->
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="asistenciaColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: asistenciaColumns"></tr>
+        </table>
+        }
+      </div>
+
+      <!-- Tarjetas para pantallas pequeñas -->
+      <div class="block md:hidden">
+        @if(asisteciaValue()?.length) {
+        <div
+          *ngFor="let element of asisteciaValue(); let i = index"
+          class="card mb-4 p-4 border rounded shadow-sm"
+        >
+          <div class="flex justify-between items-center">
+            <div class="text-lg font-bold">No. {{ i + 1 }}</div>
+            <!-- <app-button-delete
+                (click)="removeRowAsistencia(i)"
+                color="bg-btn-danger"
+                icon="delete"
+                titulo="Quitar"
+              /> -->
+          </div>
+          <div class="mt-2">
+            <div><strong>Nombre:</strong> {{ element.name | uppercase }}</div>
+            <div>
+              <strong>Apellido:</strong> {{ element.lastname | uppercase }}
+            </div>
+            <div><strong>Numero Contacto:</strong> {{ element.contact }}</div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="mt-4">
+        <button mat-button matStepperPrevious>Atras</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- Visita -->
+
+  <mat-step
+    [stepControl]="visitaForm"
+    label="Visita"
+    [editable]="isEditable"
+    [optional]="isOptional"
+  >
+    <h4>Agregar Visita</h4>
+    <form [formGroup]="visitaForm">
+      <div class="flex flex-wrap -mx-2 mt-4 mb-4">
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2">
+          <mat-form-field class="w-full">
+            <mat-label>Nombre</mat-label>
+            <input
+              id="name"
+              formControlName="name"
+              type="text"
+              matInput
+              #nameVisita
+              placeholder="Nombre"
+              [ngClass]="{ 'border-red-500': isValidFieldVisita('name') }"
+              min="0"
+              [matAutocomplete]="autoVisita"
+              (input)="searchVisita()"
+            />
+            <mat-autocomplete
+              #autoVisita="matAutocomplete"
+              (optionSelected)="onSelectedOptionVisita($event)"
+            >
+              @for (miembro of miembrosValue(); track $index) {
+              <mat-option [value]="miembro">
+                {{ miembro.name }} {{ miembro.lastname }}
+              </mat-option>
+              }
+            </mat-autocomplete>
+
+            @if (isValidFieldVisita('name')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="visitaForm.get('name')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2">
+          <mat-form-field class="w-full">
+            <mat-label>Apellido</mat-label>
+            <input
+              id="lastname"
+              formControlName="lastname"
+              type="text"
+              matInput
+              placeholder="Apellido"
+              [ngClass]="{
+                'border-red-500': isValidFieldVisita('lastname')
+              }"
+              min="0"
+            />
+            @if (isValidFieldVisita('lastname')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="visitaForm.get('lastname')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2">
+          <mat-form-field class="w-full">
+            <mat-label>Contacto</mat-label>
+            <input
+              id="contact"
+              formControlName="contact"
+              type="tel"
+              matInput
+              placeholder="Numero Contacto"
+              [ngClass]="{
+                'border-red-500': isValidFieldVisita('contact')
+              }"
+              min="0"
+            />
+            @if (isValidFieldVisita('contact')) {
+            <mat-error>
+              <span
+                customLabel
+                [errors]="visitaForm.get('contact')?.errors"
+              ></span>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="w-full sm:w-1/2 md:w-1/4 px-2 flex items-start">
+          <button
+            mat-fab
+            aria-label="Agregar Asistencia"
+            (click)="addVisita()"
+            title="Agregar Visita"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+      <hr />
+      <div class="hidden md:block">
+        @if(visitaValue()?.length){
+
+        <table
+          mat-table
+          [dataSource]="visitaValue()!"
+          class="mat-elevation-z8 demo-table"
+        >
+          <!-- Position Column -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-position">
+              No.
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element; let i = index"
+              class="mat-column-position"
+            >
+              {{ i + 1 }}
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.name | uppercase }}
+            </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="lastname">
+            <th mat-header-cell *matHeaderCellDef>Apellido</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.lastname | uppercase }}
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="contact">
+            <th mat-header-cell *matHeaderCellDef>Numero Contacto</th>
+            <td mat-cell *matCellDef="let element">{{ element.contact }}</td>
+          </ng-container>
+
+          <!-- remove Column -->
+          <ng-container matColumnDef="remove">
+            <th mat-header-cell *matHeaderCellDef>Quitar</th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <!-- <app-button-delete
+                  (click)="removeRowVisita(i)"
+                  color="bg-btn-danger"
+                  icon="delete"
+                  titulo="Quitar"
+                /> -->
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="asistenciaColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: asistenciaColumns"></tr>
+        </table>
+        }
+      </div>
+
+      <!-- Tarjetas para pantallas pequeñas -->
+      <div class="block md:hidden">
+        @if(visitaValue()?.length) {
+        <div
+          *ngFor="let element of visitaValue()!; let i = index"
+          class="card mb-4 p-4 border rounded shadow-sm"
+        >
+          <div class="flex justify-between items-center">
+            <div class="text-lg font-bold">No. {{ i + 1 }}</div>
+            <!-- <app-button-delete
+                (click)="removeRowVisita(i)"
+                color="bg-btn-danger"
+                icon="delete"
+                titulo="Quitar"
+              /> -->
+          </div>
+          <div class="mt-2">
+            <div><strong>Nombre:</strong> {{ element.name | uppercase }}</div>
+            <div>
+              <strong>Apellido:</strong> {{ element.lastname | uppercase }}
+            </div>
+            <div><strong>Numero Contacto:</strong> {{ element.contact }}</div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="mt-4">
+        <button mat-button matStepperPrevious>Atras</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Hecho</ng-template>
+
+    <div>
+      <button mat-button matStepperPrevious>Atras</button>
+      <button mat-button (click)="onSubmit()">Guardar</button>
+    </div>
+  </mat-step>
+</mat-stepper>
+<!-- </div> --><!-- IGNORE -->

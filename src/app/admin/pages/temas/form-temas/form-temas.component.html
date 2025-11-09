@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>Agregar Tema</h2>
+
+<form [formGroup]="temaForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content class="max-h-[80vh] overflow-y-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Primera columna -->
+    <div class="col-span-1 space-y-6">
+      <!-- numero de celula -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Tema</mat-label>
+          <input
+            id="tema"
+            formControlName="tema"
+            type="text"
+            matInput
+            placeholder="Tema de la Leccion"
+            [ngClass]="{ 'border-red-500': isValidField('tema') }"
+          />
+          @if (isValidField('tema')) {
+          <mat-error>
+            <span customLabel [errors]="temaForm.get('tema')?.errors"></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda columna -->
+    <div class="col-span-1 space-y-6">
+      <!-- descripcion -->
+      <div>
+        <mat-form-field class="w-full">
+          <mat-label>Descripcion</mat-label>
+          <textarea
+            id="description"
+            formControlName="description"
+            matInput
+            placeholder="Descripcion"
+            rows="1"
+            [ngClass]="{ 'border-red-500': isValidField('description') }"
+          ></textarea>
+          @if (isValidField('description')) {
+          <mat-error class="invalid-text">
+            <span
+              customLabel
+              [errors]="temaForm.get('description')?.errors"
+            ></span>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-span-2 space-y-6">
+        <input
+        type="file"
+        (change)="onFileSelected($event)"
+        accept="application/pdf"
+        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+      />
+      <div *ngIf="pdfSrc" class="mt-5 w-full">
+        <pdf-viewer
+          [src]="pdfSrc()!"
+          [render-text]="true"
+          class="w-full h-96 border border-gray-300 rounded-lg"
+        ></pdf-viewer>
+      </div>
+    </div>
+  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="mt-4 space-x-2">
+    <button mat-button color="warn" type="button" (click)="close()">
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" type="submit">Guardar</button>
+  </mat-dialog-actions>  
+</form>

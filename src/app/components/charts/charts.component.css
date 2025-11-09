@@ -1,0 +1,25 @@
+.pie-chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+}
+
+.pie-chart-container canvas {
+    max-height: 100%;
+    /* Asegúrate de que el canvas no exceda la altura del contenedor */
+}
+
+.relative {
+    position: relative;
+}
+
+.h-64 {
+    height: 16rem;
+    /* 256px */
+}
+
+.lg\:h-80 {
+    height: 20rem;
+    /* 320px */
+}

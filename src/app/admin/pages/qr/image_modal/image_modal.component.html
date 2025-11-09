@@ -1,0 +1,34 @@
+<h2 mat-dialog-title class="text-lg font-semibold text-gray-800">
+  Vista previa
+</h2>
+
+<mat-dialog-content class="flex justify-center items-center p-4">
+  <img
+    [src]="data.image | appImageProfile"
+    alt="Vista previa"
+    class="max-w-full rounded shadow-lg"
+  />
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <!-- Botón Descargar -->
+  <button
+    mat-flat-button
+    color="accent"
+    class="rounded-lg shadow px-4"
+    (click)="downloadImage()"
+  >
+    Descargar
+</button>
+
+  <!-- Botón Cerrar -->
+  <button
+    mat-flat-button
+    color="primary"
+    class="rounded-lg shadow px-4"
+    (click)="close()"
+  >
+    Cerrar
+  </button>
+</mat-dialog-actions>
+
