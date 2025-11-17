@@ -12,7 +12,7 @@ export class LiderAdminService {
 
   private readonly baseUrl: string = environment.baseUrl;
   private http = inject(HttpClient);
-  
+
   private _lideresResponse  = signal<ListLideresResponse | null>(null);
   private _lideresList = signal<LideresPagination | null>(null);
   private _lider = signal<Lider | null>(null);
@@ -31,13 +31,13 @@ export class LiderAdminService {
 
   constructor() { }
 
-  getAllLideres(page: number, term: string, per_page: number): Observable<Boolean> 
+  getAllLideres(page: number, term: string, per_page: number): Observable<Boolean>
   {
     const url = `${this.baseUrl}/api/admin_lider?page=${page}&term=${term}&per_page=${per_page}`;
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);
-      
+
     return this.http.get<ListLideresResponse>(url, {headers})
     .pipe(
       map(({ status, lideres }) => {
@@ -49,13 +49,13 @@ export class LiderAdminService {
     );
   }
 
-  getLiderById(id: number): Observable<Boolean> 
+  getLiderById(id: number): Observable<Boolean>
   {
     const url = `${this.baseUrl}/api/admin_lider/${id}`;
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);
-      
+
     return this.http.get<LiderResponse>(url, {headers})
     .pipe(
       map(({ status, lider }) => {
@@ -65,7 +65,7 @@ export class LiderAdminService {
       catchError(err => throwError(() => err.error.message))
     );
   }
-  
+
   addLider(liderForm: LiderForm): Observable<boolean>
   {
     const body = liderForm;
@@ -83,7 +83,7 @@ export class LiderAdminService {
 
         if (status && lider!.contact) {
         // URL del sistema
-        const appUrl = `${window.location.origin}/login`;
+        const appUrl = `${window.location.origin}/`;
 
         // Mensaje personalizado de WhatsApp
         const mensaje = `Hola ${lider!.name}! 👋\n\n` +
@@ -101,7 +101,7 @@ export class LiderAdminService {
         // Abrir nueva pestaña con el mensaje
         window.open(whatsappUrl, '_blank');
       }
-        
+
         return status;
       }),
       catchError(err => throwError(() => err.error.message))

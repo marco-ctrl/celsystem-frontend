@@ -80,7 +80,7 @@ export class FormLiderComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.data?.foto) {
-      this.cameraComponent.srcPhoto = this.baseUrl + `/storage/${this.data.foto}`;
+      this.cameraComponent.srcPhoto = this.baseUrl + `/${this.data.foto}`;
     } else {
       this.cameraComponent.srcPhoto = '../../../../assets/images/user-default.png';
     }

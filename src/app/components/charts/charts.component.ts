@@ -36,19 +36,19 @@ export class ChartsComponent implements OnInit {
       }
     }
   };
-  
+
   public barChartLabels = signal<any[]>([]);
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartData: ChartDataset[] = [
-    { 
-      data: [], 
+    {
+      data: [],
       label: 'Asistencia',
       barThickness: 15
     }
   ];
 
-  
+
   // Pie Chart
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -70,10 +70,9 @@ export class ChartsComponent implements OnInit {
   public pieChartLegend = true;
 
   constructor() { }
-  
+
   ngOnInit(): void {
-    
-    //console.log(this.chartServices.data());
+
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 6 }, (_, i) => currentYear - i); // Año actual y 5 anteriores
     this.selectedYear = currentYear;
@@ -82,10 +81,6 @@ export class ChartsComponent implements OnInit {
   }
 
   onYearChange(): void {
-    // Aquí puedes actualizar los gráficos según el año seleccionado
-    console.log('Año seleccionado:', this.selectedYear);
-
-    // Ejemplo: podrías hacer una llamada al backend para obtener datos del año
     this.loadCantidadAsistencia(this.selectedYear);
   }
 
@@ -116,14 +111,12 @@ export class ChartsComponent implements OnInit {
               }
             ]
           });
-          console.log(this.pieChartLabels());
-          console.log(this.pieChartData());
         },
         error: (message) => {
           Swal.fire('Error', message, 'error')
         }
       },
-      
+
     );
   }
 

@@ -68,12 +68,12 @@ export const adminRoutes: CustomRoute[] = [
             {
                 path: 'informe-celula',
                 title: 'Informe Celula',
-                loadComponent: () => import('../admin/pages/report/informe-celula/informe-celula.component'),
+                loadComponent: () => import('../admin/pages/report/informe-celula/informe-celula.component').then((m: any) => m.LayoutComponent || m.default),
             },
             {
                 path: 'celulas',
                 title: 'Reporte Celulas',
-                loadComponent: () => import('../admin/pages/report/celulas/celulas.component'),
+                loadComponent: () => import('../admin/pages/report/celulas/celulas.component').then((m: any) => m.LayoutComponent || m.default),
             },
             {
                 path: '',

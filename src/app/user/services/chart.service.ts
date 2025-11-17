@@ -33,13 +33,13 @@ export class ChartService {
 
   constructor() { }
 
-  getAllResultBar(year: Number): Observable<Boolean> 
+  getAllResultBar(year: Number): Observable<Boolean>
   {
     const url = `${this.baseUrl}/api/admin_home/assistant-amount?&year=2024`;
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);
-      
+
     return this.http.get<CantidadAsistencia>(url, {headers})
     .pipe(
       map(({ label, data, status }) => {
@@ -51,21 +51,18 @@ export class ChartService {
     );
   }
 
-  getAllResultPie(): Observable<Boolean> 
+  getAllResultPie(): Observable<Boolean>
   {
     const url = `${this.baseUrl}/api/admin_home/total-members-tipe`;
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);
-      //console.log('se ejecuta');
-      
+
     return this.http.get<TotalMembers>(url, {headers})
     .pipe(
       map(({ tipe, total, status }) => {
         this._labelPie.set(tipe);
         this._dataPie.set(total);
-        console.log(this.labelPie());
-        console.log(this.dataPie());
         return this._statusPie.set(status)!;
       }),
       catchError(err => throwError(() => err.error.message))

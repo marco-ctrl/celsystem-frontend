@@ -4,7 +4,6 @@ import { InformeAdminService } from '../../../services/informe-admin.service';
 import { ListInformesResponse } from '../../../interfaces/informe-admin.interface';
 import Swal from 'sweetalert2';
 import { MatIconModule } from '@angular/material/icon';
-import { DataStatusPipe } from '../../../../pipes/data-status.pipe';
 import { CurrencyBoliviaPipe } from '../../../../pipes/currency-bolivia.pipe';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -22,7 +21,6 @@ import { PaginationComponent } from '../../../../components/pagination/paginatio
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,
-    DataStatusPipe,
     CurrencyBoliviaPipe,
     RouterModule,
     MaterialModule,
@@ -42,13 +40,13 @@ export default class InformeCelulaComponent {
 
   private fb              = inject(FormBuilder);
   private informeService    = inject(InformeAdminService);
-  
+
   private _isLoading     = signal<Boolean>(true);
   public _isModalVisible = signal<boolean>(false);
-  
+
   public informes       = computed(() => this.informeService.informees());
   public isLoading      = computed(() => this._isLoading());
-  
+
   private pdfService = inject(PdfService);
   private excelService = inject(ExcelService);
   private http = inject(HttpClient);
@@ -61,7 +59,7 @@ export default class InformeCelulaComponent {
   });
 
   constructor(private datePipe: DatePipe) {}
-  
+
   public formSearch: FormGroup = this.fb.group({
     inicio: ['', [Validators.required]],
     final: ['', [Validators.required]]

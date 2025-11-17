@@ -82,7 +82,6 @@ export class AuthService {
       this._authStatus.set(AuthStatus.notAuthenticated);
 
     }
-    console.log('cerrando session');
     this.logouted().subscribe();
   }
 

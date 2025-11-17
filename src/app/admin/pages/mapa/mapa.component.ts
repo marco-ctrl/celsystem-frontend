@@ -79,8 +79,10 @@ export default class MapaComponent {
         L.marker([lat, lon]).addTo(this.map!).bindPopup('Estas Aqui!').openPopup();
       }, (error) => {
         console.error('Error getting location: ', error);
+        Swal.fire('Error', 'Error getting location', 'error')
       });
     } else {
+      Swal.fire('Error', 'Geolocation is not supported by this browser.', 'error')
       console.error('Geolocation is not supported by this browser.');
     }
   }

@@ -10,12 +10,12 @@ export class ImageProfilePipe implements PipeTransform {
   private readonly baseUrl: string = environment.baseUrl;
 
   transform(value: string): string {
-    
+
     if(!value || value == ''){
       return '../../assets/images/user-default.png';
     }
 
-    return this.baseUrl + `/storage/${value}`;
+    return this.baseUrl + `/${value}`;
   }
 
 }

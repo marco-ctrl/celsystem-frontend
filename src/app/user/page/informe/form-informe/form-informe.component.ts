@@ -129,7 +129,6 @@ export default class FormInformeComponent {
   ngOnInit(): void {
 
     this.celulaService.getCelula().subscribe();
-    //console.log(this.celulaService.celula());
 
     this.activateRouter.params
       .pipe(
@@ -228,7 +227,6 @@ export default class FormInformeComponent {
 
   onSubmit(): void {
     if (this.informeForm.valid) {
-      console.log(this.informeForm.value);
       const formData = new FormData();
       for (const key of Object.keys(this.informeForm.value)) {
         formData.append(key, this.informeForm.value[key]);
@@ -236,11 +234,7 @@ export default class FormInformeComponent {
 
       formData.append('offering', this.ofrendaForm.value.amount);
       formData.append('payment_method', this.ofrendaForm.value.type);
-      //formData.append('voucher', this.ofrendaForm.value.voucher);
-      //
-      //if (this.ofrendaForm.value.voucher instanceof File) {
-      //formData.append('voucher', this.ofrendaForm.value.voucher);
-      //}
+
       formData.append('voucher', this.voucherFile || '');
 
       formData.append('photo', this.selectFile || '');
@@ -276,7 +270,6 @@ export default class FormInformeComponent {
   }
 
   public checkStateCelula = effect(() => {
-    console.log(this.celulaValue());
     if (this.celulaValue()) {
       this.informeForm.patchValue({
         celula_id: this.celulaValue()?.id,
@@ -500,7 +493,6 @@ export default class FormInformeComponent {
   searchAsistente() {
     const { name } = this.asistenciaForm.value || "";
     this.miebroService.getAsistente(this.celulaValue()!.id, name).subscribe();
-    console.log(this.miebroService.miembros());
   }
 
   onSelectedOptionAsistente(event: MatAutocompleteSelectedEvent): void {
@@ -530,7 +522,6 @@ export default class FormInformeComponent {
     }
 
     const miembro: Miembro = event.option.value;
-    console.log(miembro);
     this.visitaForm.patchValue({
       name: miembro.name,
       lastname: miembro.lastname,
@@ -552,8 +543,7 @@ export default class FormInformeComponent {
     else {
       this.qrImageService.getShowActiveQrImages().subscribe({
         next: () => {
-          console.log(this.qrImageService.qrImage()?.image);
-          this.previewQrImage.set(this.srcPhoto + '/storage/' + this.qrImageService.qrImage()?.image);
+          this.previewQrImage.set(this.srcPhoto + '/' + this.qrImageService.qrImage()?.image);
         },
         error: (message) => {
           Swal.fire('Error', message, 'error')

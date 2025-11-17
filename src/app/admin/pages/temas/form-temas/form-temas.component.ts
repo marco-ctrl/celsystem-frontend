@@ -73,11 +73,11 @@ export class FormTemasComponent {
     private sanitizer: DomSanitizer
   ) {
     this.temaForm = this.fb.group({
-    tema: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
-    description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
-  });
+      tema: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
+      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
+    });
 
-  
+
   }
 
   isValidField(field: string) {
@@ -85,7 +85,7 @@ export class FormTemasComponent {
       && this.temaForm.controls[field].touched;
   }
 
-onSubmit(): void {
+  onSubmit(): void {
     if (this.temaForm.valid) {
       if (this.selectedFile) {
         const formData = new FormData();
@@ -97,6 +97,7 @@ onSubmit(): void {
         this.temaService.addTema(formData).subscribe(
           {
             next: () => {
+              this.dialogRef.close(this.temaForm.value);
               Swal.fire({
                 icon: "success",
                 title: "Leccion enviada correctamente",
@@ -176,7 +177,7 @@ onSubmit(): void {
             timer: 3000
           });
           if(this.temaService.status()){
-            this.statusResponse.emit();        
+            this.statusResponse.emit();
           }
           else{
             Swal.fire({

@@ -85,8 +85,6 @@ export class QrImageService {
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);
 
-    console.log(token);
-
     return this.http.post<QrImageResponse>(url, body, { headers })
       .pipe(
         map(({ status, qrImage }) => {
@@ -104,7 +102,7 @@ export class QrImageService {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);
-      
+
     return this.http.post<QrImageResponse>(url, body, { headers })
       .pipe(
         map(({ status, qrImage }) => {
@@ -121,7 +119,7 @@ export class QrImageService {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);
-      
+
     return this.http.delete<QrImageResponse>(url, { headers })
       .pipe(
         map(({ status, message }) => {

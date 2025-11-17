@@ -12,7 +12,7 @@
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         {{ item.title }}
       </mat-list-item>
-      
+
         }
       @if (item.subItems) {
       <mat-expansion-panel>
@@ -25,7 +25,7 @@
 
         <mat-action-list>
           @for (subItem of item.subItems; track $index) {
-          <a mat-list-item [routerLink]="subItem.url">{{ subItem.title }}</a>
+          <a mat-list-item [routerLink]="subItem.url" (click)="sidenav.toggle()">{{ subItem.title }}</a>
           }
         </mat-action-list>
       </mat-expansion-panel>

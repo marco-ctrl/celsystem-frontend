@@ -49,7 +49,7 @@ export default class FormInformeComponent implements OnDestroy, OnInit {
   showQrColumn = signal<boolean>(false);
   public selectedMiembro?: Miembro;
 
-  private readonly srcPhoto: string = environment.baseUrl;
+  private readonly srcPhoto: string = environment.baseUrl + '/';
   private decimalPipe!: DecimalPipe;
   private router = inject(Router);
   private activateRouter = inject(ActivatedRoute)
@@ -228,7 +228,6 @@ export default class FormInformeComponent implements OnDestroy, OnInit {
 
   onSubmit(): void {
     if (this.informeForm.valid) {
-      console.log(this.informeForm.value);
       const formData = new FormData();
       for (const key of Object.keys(this.informeForm.value)) {
         formData.append(key, this.informeForm.value[key]);
@@ -276,7 +275,7 @@ export default class FormInformeComponent implements OnDestroy, OnInit {
   }
 
   public checkStateCelula = effect(() => {
-    console.log(this.celulaValue());
+
     if (this.celulaValue()) {
       this.informeForm.patchValue({
         celula_id: this.celulaValue()?.id,
@@ -300,19 +299,7 @@ export default class FormInformeComponent implements OnDestroy, OnInit {
   });
 
   selectCelula(id: number | null): void {
-    /*console.log(this.celulaValue());
-    if (id) {
-      this.informeForm.patchValue({
-        celula_id: id,
-        addres: this.celulaValue()?.addres,
-      });
-    }
-    else {
-      this.informeForm.patchValue({
-        celula_id: '',
-        addres: ''
-      });
-    }*/
+
   }
 
   addInforme(informeForm: any) {
@@ -516,7 +503,6 @@ export default class FormInformeComponent implements OnDestroy, OnInit {
   searchAsistente() {
     const { name } = this.asistenciaForm.value || "";
     this.miebroService.getAsistente(this.celulaValue()!.id, name).subscribe();
-    console.log(this.miebroService.miembros());
   }
 
   onSelectedOptionAsistente(event: MatAutocompleteSelectedEvent): void {
@@ -546,7 +532,7 @@ export default class FormInformeComponent implements OnDestroy, OnInit {
     }
 
     const miembro: Miembro = event.option.value;
-    console.log(miembro);
+
     this.visitaForm.patchValue({
       name: miembro.name,
       lastname: miembro.lastname,
@@ -568,8 +554,7 @@ export default class FormInformeComponent implements OnDestroy, OnInit {
     else {
       this.qrImageService.getShowActiveQrImages().subscribe({
         next: () => {
-          console.log(this.qrImageService.qrImage()?.image);
-          this.previewQrImage.set(this.srcPhoto + '/storage/' + this.qrImageService.qrImage()?.image);
+          this.previewQrImage.set(this.srcPhoto + this.qrImageService.qrImage()?.image);
         },
         error: (message) => {
           Swal.fire('Error', message, 'error')

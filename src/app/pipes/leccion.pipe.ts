@@ -10,8 +10,8 @@ export class LeccionPipe implements PipeTransform {
   private readonly baseUrl: string = environment.baseUrl;
 
   transform(value: string): string {
-    
-    return this.baseUrl + `${value}`;
+
+    return this.baseUrl + `/${value}`;
   }
 
 }

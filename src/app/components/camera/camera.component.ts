@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CameraComponent {
-  
+
   @Input() set srcPhoto(value: string) {
     if (value) {
       //this.imageSrc = value;
@@ -88,15 +88,12 @@ export class CameraComponent {
       this.renderer.setAttribute(this.imagenElement.nativeElement, 'src', '');
     }
     this._isCapturing.update(value => true);
-    console.log(this.isCapturing());
     const canvas = this.canvasElement.nativeElement;
     const context = canvas.getContext('2d');
     context.drawImage(this.videoElement.nativeElement, 0, 0, 140, 140);
     const imageData = canvas.toDataURL('image/jpeg', 1.0);
     this.renderer.setAttribute(this.imagenElement.nativeElement, 'src', imageData);
     this.photoFormated.emit(imageData);
-    //console.log(imageData);
-    //this._isCapturing.update(value => false);
   }
 
   imagenCanvas() {
@@ -120,10 +117,8 @@ export class CameraComponent {
         this.imagenElement.nativeElement.onload = () => {
           const context = this.canvasElement.nativeElement.getContext('2d');
           context.drawImage(this.imagenElement.nativeElement, 0, 0, 140, 140);
-          console.log(this.isCapturing());
           if (!this.isCapturing()) {
             this.photoFormated.emit(imageData);
-            console.log(imageData);
           }
 
 
@@ -133,15 +128,7 @@ export class CameraComponent {
       };
       reader.readAsDataURL(input.files[0]);
 
-      //input.value = '';
     }
   }
 
-  /*public checkStateModal = effect(() => {
-    if (!this.stateModal.stateModal()) {
-      this.apagarCamera();
-      this.photoFormated.emit('');
-      //this.imagenCanvas();
-    }
-  });*/
- }
+}
